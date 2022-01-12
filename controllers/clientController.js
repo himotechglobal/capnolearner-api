@@ -1,4 +1,4 @@
-const Client = require('../models/ClientModel')
+const Client = require('../models/clientModel')
 
 
 // get all Client list
