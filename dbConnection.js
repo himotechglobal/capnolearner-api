@@ -9,7 +9,7 @@ const db_connection = mysql
     password: process.env.DB_PASS, 
   })
   .on("error", (err) => {
-    console.log("Failed to connect to Database - ", process.env.DB_HOST);
+    console.log("Failed to connect to Database - ", err);
   });
 
 module.exports = db_connection;
