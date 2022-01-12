@@ -99,5 +99,5 @@ exports.deleteClient = (req, res)=>{
              message: 'Client deleted successully!'
         });
     })
-}
+} 
 
