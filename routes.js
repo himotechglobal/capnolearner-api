@@ -5,7 +5,7 @@ const { body } = require('express-validator');
 const { login } = require('./controllers/loginController');
 const auth = require("./middleware/auth")
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
-const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/ClientController');
+const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupList, getGroupByID, createNewGroup, updateGroup, deleteGroup } = require('./controllers/GroupController');
 
 const { getOwnerList, updateOwner } = require('./controllers/editAdminProfileController');
