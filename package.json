@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +22,8 @@
     "less-middleware": "^3.1.0",
     "md5": "^2.3.0",
     "morgan": "^1.10.0",
-    "mysql2": "^2.3.3"
+    "mysql2": "^2.3.3",
+    "nodemo": "^1.0.0"
   },
   "devDependencies": {
     "nodemo": "^1.0.0"

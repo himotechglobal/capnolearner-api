@@ -1,4 +1,4 @@
-const Session = require('../models/sessionMOdel')
+const Session = require('../models/sessionModel')
 const SessionRecord = require('../models/sessionRecordModel')
 const SessionData = require('../models/sessionDataModel')
 
