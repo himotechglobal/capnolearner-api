@@ -3,27 +3,30 @@ const Client = require('../models/clientModel')
 
 // get all Client list
 exports.getClientList = (req, res) => {
-    Client.getAllClient((err, clients) => {
-        if(err)
-        throw new Error(err)
-        return res.status(200).json({ 
-            success: true,
-            clients
+    if(req.query.trainer){
+        Client.getAllClientTrainer(req.query,(err, clients) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                clients
+            })
         })
-    })
+    }
+    else{
+        Client.getAllClientOwner(req.query,(err, clients) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                clients
+            })
+        })
+    }
+   
 }
 
-// get all Client list
-exports.getInctiveClientList = (req, res) => {
-    Client.getAllInactiveClient((err, clients) => {
-        if(err)
-        throw new Error(err)
-        return res.status(200).json({ 
-            success: true,
-            clients
-        })
-    })
-}
+ 
 
 // get Client by id
 exports.getClientByID = (req,res) => {

@@ -7,6 +7,8 @@ const auth = require("./middleware/auth")
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupList, getGroupByID, createNewGroup, updateGroup, deleteGroup } = require('./controllers/groupController');
+const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData } = require('./controllers/sessionController');
+const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig } = require('./controllers/reportController');
 
 const { getOwnerList, updateOwner } = require('./controllers/editAdminProfileController');
 const { getRecordingList } = require('./controllers/getRecordingController');
@@ -31,20 +33,32 @@ router.post('/login',[
 router.get('/getuser',getUser); // get owner list
 
 // Trainer
-router.get('/trainer',auth, getTrainerList) // get trainer list
-router.get('/inactivetrainer', getTrainerInactiveList) // get active trainer list
+router.get('/trainers',auth, getTrainerList) // get trainer list
 router.get('/trainer/:id', getTrainerByID) // get trainer by id
 router.post('/trainer/create', createNewTrainer) // insert new trainer
 router.put('/trainer/update/:id', updateTrainer) // edit trainer by id
 router.delete('/trainer/delete/:id', deleteTrainer) // delete trainer by id
 
 // Client
-router.get('/client', getClientList) // get client list 
-router.get('/inactiveclient', getInctiveClientList) // get acitve client list
+router.get('/clients',auth, getClientList) // get client list 
 router.get('/client/:id', getClientByID) // get client by id
 router.post('/client/create', createNewClient) // insert new client
 router.put('/client/update/:id', updateClient) // edit client by id
 router.delete('/client/delete/:id', deleteClient) // delete client by id
+
+//Sessions
+router.get('/sessions',auth, getSessionList) // get session list 
+router.get('/session/record',auth, getRecordList) // get record list 
+router.get('/session/data/all',auth, getSessionAllData) // get session data list 
+router.get('/session/data',auth, getSessionSignalData) // get session data list 
+ 
+
+//Reports
+router.get('/configured/report',auth, getConfigList) // get pre-config list 
+router.get('/configured/signals',auth, getMultiReportSignalList) // get multi report signals list 
+router.get('/report/config',auth, getReportConfig) // get pre-config report config
+router.get('/report/saved/config',auth, getSavedReportConfig) // get pre-config report config
+  
 
 // Group
 router.get('/group', getGroupList)
@@ -63,24 +77,7 @@ router.get('/recording/distributor', getRecordingList)
 // Hardware Profile
 router.get('/hardwareprofile', getHardwareProfileList)
 router.put('/hardwareprofile/update/:id', updateHardwareProfile)
-
-// get country list
-router.get('/session', function(req, res) {
-    dbConn.query('SELECT * FROM session', function(err, rows) {
  
-        if (err) {
-            res.json({
-                msg: 'error'
-            });
-        } else {
-            res.json({
-                msg: 'success',
-                rows
-            });
-        }
-    });
-});
-
 // get country list
 router.get('/countries', function(req, res) {
     dbConn.query('SELECT * FROM countries', function(err, rows) {

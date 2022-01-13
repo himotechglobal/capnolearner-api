@@ -37,17 +37,32 @@ var Trainer = function(trainer) {
 }
 
 // get all trainer 
-Trainer.getAllTrainer = (result) => {
-    dbConn.query('SELECT * FROM capno_users WHERE user_type=2 AND status = 1 ', (err, res) => {
-      if (err) {
-        result(null, err)
-      } else {
-        result(null, res)
-      }
-    })
+Trainer.getAllTrainer = (data,result) => {
+    if(data.status){
+        dbConn.query('SELECT * FROM capno_users WHERE   status = ? AND ((associated_owner = ? and user_type=2 ) OR ( id = ? and user_type=1  )) order by `firstname` asc', [data.status , md5(data.user_id),data.user_id],  (err, res) => {
+            if (err) {
+              result(null, err)
+            } else {
+              result(null, res)
+            }
+          })
+    }
+    else{
+        dbConn.query('SELECT * FROM capno_users WHERE   (associated_owner = ? and user_type=2 ) OR ( id = ? and user_type=1  ) order by `firstname` asc', [md5(data.user_id),data.user_id],  (err, res) => {
+            if (err) {
+              result(null, err)
+            } else {
+              result(null, res)
+            }
+          })
+    }
+  
 } 
 
-Trainer.getAllTrainerInactive = (result) => {
+ 
+
+
+Trainer.getSingleTrainer = (result) => {
     dbConn.query('SELECT * FROM capno_users WHERE user_type=2 AND status = 2', (err, res) => {
       if (err) {
         result(null, err)

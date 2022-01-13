@@ -1,3 +1,4 @@
+const md5 = require('md5');
 const dbConn = require('../dbConnection')
 
 const user_type = 3
@@ -28,14 +29,50 @@ var Client = function(client) {
 }
 
 // get all Client 
-Client.getAllClient = (result) => {
-    dbConn.query('SELECT * FROM capno_users WHERE user_type=3 AND status = 1', (err, res) => {
-      if (err) {
-        result(null, err)
-      } else {
-        result(null, res)
-      }
-    })
+Client.getAllClientTrainer = (data,result) => {
+    if(data.status){
+    
+        dbConn.query('SELECT * FROM capno_users WHERE   status = ? AND  associated_practioner = ? and user_type= ?  order by `firstname` asc', [data.status , md5(data.user_id),data.user_type],  (err, res) => {
+            if (err) {
+              result(null, err)
+            } else {
+              result(null, res)
+            }
+          })
+    }
+    else{
+        dbConn.query('SELECT * FROM capno_users WHERE  user_type=?  AND  associated_practioner = ?  order by `firstname` asc', [data.user_type,md5(data.user_id)],  (err, res) => {
+            if (err) {
+              result(null, err)
+            } else {
+              result(null, res)
+            }``
+          })
+    }
+  
+} 
+
+Client.getAllClientOwner = (data,result) => {
+    if(data.status){
+    
+        dbConn.query('SELECT * FROM capno_users WHERE   status = ? AND (associated_owner = ? OR associated_practioner = ?) and user_type= ?   order by `firstname` asc', [data.status , md5(data.user_id),md5(data.user_id) ,data.user_type],  (err, res) => {
+            if (err) {
+              result(null, err)
+            } else {
+              result(null, res)
+            }
+          })
+    }
+    else{
+        dbConn.query('SELECT * FROM capno_users WHERE  user_type= ?   AND  (associated_owner = ? OR associated_practioner = ?)  order by `firstname` asc', [data.user_type,md5(data.user_id),md5(data.user_id)],  (err, res) => {
+            if (err) {
+              result(null, err)
+            } else {
+              result(null, res)
+            }``
+          })
+    }
+  
 } 
 
 // get all Client 

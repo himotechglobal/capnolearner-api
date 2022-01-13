@@ -3,27 +3,16 @@ const Trainer = require('../models/trainerModel')
 
 // get all Trainer list
 exports.getTrainerList = (req, res) => {
-    Trainer.getAllTrainer((err, trainers) => {
+    Trainer.getAllTrainer(req.query,(err,trainers) => {
         if(err)
         throw new Error(err)
         return res.status(200).json({ 
-            success: true,
+            status: true,
             trainers
         })
     })
 }
-
-// get all Trainer list
-exports.getTrainerInactiveList = (req, res) => {
-    Trainer.getAllTrainerInactive((err, trainers) => {
-        if(err)
-        throw new Error(err)
-        return res.status(200).json({ 
-            success: true,
-            trainers
-        })
-    })
-}
+ 
 
 // get Trainer by id
 exports.getTrainerByID = (req,res) => {
