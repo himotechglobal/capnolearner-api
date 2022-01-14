@@ -2,6 +2,9 @@ const ConfiguredReport = require('../models/configuredReportModel')
 const MultiReportSignal = require('../models/multiReportSignalModel')
 const ConfiguredReportGraphs = require('../models/configuredReportGraphs')
 const SavedReportGraphs = require('../models/savedReportGraphs')
+const SingledReportPdf = require('../models/singledReportPdf')
+const SavedSingleReport = require('../models/savedSingleReport')
+const SavedMultipleReport = require('../models/savedMultipleReport')
 
 
 // get all Session list
@@ -48,6 +51,46 @@ exports.getSavedReportConfig = (req, res) => {
    
 }
 
+exports.getSingleReport = (req, res) => {
+ 
+    SavedSingleReport.getAllReport(req.query,(err, reports) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                reports
+            })
+        })
+    
+    
+}
+exports.getMultileReport = (req, res) => {
+ 
+    SavedMultipleReport.getAllReport(req.query,(err, reports) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                reports
+            })
+        })
+    
+   
+}
+
+exports.getSingleReportPdf = (req, res) => {
+ 
+    SingledReportPdf.getAllPdf(req.query,(err, pdfs) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                pdfs
+            })
+        })
+    
+   
+}
 
 
 // get all Signal list

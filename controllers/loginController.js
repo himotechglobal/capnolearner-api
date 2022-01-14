@@ -46,6 +46,7 @@ exports.login = async (req,res,next) =>{
             return res.json({
                 status: true,
                 user_id: rowResult[0].id,
+                user_type: rowResult[0].user_type,
                 accessToken: token
             });
         }

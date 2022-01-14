@@ -8,7 +8,7 @@ const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupList, getGroupByID, createNewGroup, updateGroup, deleteGroup } = require('./controllers/groupController');
 const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData } = require('./controllers/sessionController');
-const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig } = require('./controllers/reportController');
+const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport} = require('./controllers/reportController');
 
 const { getOwnerList, updateOwner } = require('./controllers/editAdminProfileController');
 const { getRecordingList } = require('./controllers/getRecordingController');
@@ -58,8 +58,10 @@ router.get('/configured/report',auth, getConfigList) // get pre-config list
 router.get('/configured/signals',auth, getMultiReportSignalList) // get multi report signals list 
 router.get('/report/config',auth, getReportConfig) // get pre-config report config
 router.get('/report/saved/config',auth, getSavedReportConfig) // get pre-config report config
+router.get('/report/single',auth, getSingleReport) // get pre-config report config
+router.get('/report/single/pdf',auth, getSingleReportPdf) // get pre-config report config
+router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
   
-
 // Group
 router.get('/group', getGroupList)
 router.get('/group/:id', getGroupByID)
