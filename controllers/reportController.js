@@ -5,6 +5,7 @@ const SavedReportGraphs = require('../models/savedReportGraphs')
 const SingledReportPdf = require('../models/singledReportPdf')
 const SavedSingleReport = require('../models/savedSingleReport')
 const SavedMultipleReport = require('../models/savedMultipleReport')
+const MultiReportPdf = require('../models/multiReportPdf')
 
 
 // get all Session list
@@ -77,6 +78,22 @@ exports.getMultileReport = (req, res) => {
     
    
 }
+
+
+exports.getMultileReportPdf = (req, res) => {
+ 
+    MultiReportPdf.getAllPdf(req.query,(err, pdfs) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                pdfs
+            })
+        })
+    
+   
+}
+
 
 exports.getSingleReportPdf = (req, res) => {
  

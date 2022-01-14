@@ -2,7 +2,7 @@ const md5 = require('md5');
 const dbConn = require('../dbConnection')
 
  
-var SingleSessionPdf = function(pdf) {
+var MultiReportPdf = function(pdf) {
     this.session_id = pdf.session_id
     this.pdf_name = pdf.pdf_name
     this.data = pdf.data
@@ -12,9 +12,9 @@ var SingleSessionPdf = function(pdf) {
 }
 
 // get all Client 
-SingleSessionPdf.getAllPdf = (data,result) => {
+MultiReportPdf.getAllPdf = (data,result) => {
    
-        dbConn.query('SELECT * FROM session_data_report_pdf WHERE   session_id = ?    order by `id` desc', [data.session_id],  (err, res) => {
+        dbConn.query('SELECT * FROM multisession_data_report_pdf WHERE   cid = ?    order by `id` desc', [data.session_id],  (err, res) => {
             if (err) {
               result(null, err)
             } else {
@@ -25,4 +25,4 @@ SingleSessionPdf.getAllPdf = (data,result) => {
   
 } 
  
-module.exports = SingleSessionPdf
+module.exports = MultiReportPdf

@@ -26,7 +26,7 @@ SessionData.getAllData = (data,result) => {
 
 // get all session signal wise data 
 SessionData.getSignalData = (data,result) => {
-    dbConn.query('SELECT * FROM capno_data where signal_type = ? AND sessionid = ?',[data.signal_name,md5(data.session_id)], (err, res) => {
+    dbConn.query('SELECT * FROM capno_data where signal_type = ? AND sessionid = ? AND data_type = 1',[data.signal_name,md5(data.session_id)], (err, res) => {
       if (err) {
         result(null, err)
       } else {
