@@ -51,7 +51,7 @@ router.get('/sessions',auth, getSessionList) // get session list
 router.get('/session/record',auth, getRecordList) // get record list 
 router.get('/session/data/all',auth, getSessionAllData) // get session data list 
 router.get('/session/data',auth, getSessionSignalData) // get session data list 
-router.get('/session/info', getSessionInfo) // get session data list 
+router.get('/session/info',auth, getSessionInfo) // get session data list 
  
 
 //Reports
