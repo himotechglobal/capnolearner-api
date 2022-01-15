@@ -33,6 +33,20 @@ exports.getSessionAllData = (req, res) => {
 
 }
 
+// get   Session Info
+exports.getSessionInfo = (req, res) => {
+ 
+    Session.getSessionInfo(req.query,(err, session) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            session
+        })
+    })
+
+
+}
 
 // get signal wise Session Data
 exports.getSessionSignalData = (req, res) => {
