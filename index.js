@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
+// const busboy = require('connect-busboy');
+// const form = require('connect-form');
+// const form = require('connect-form');
 
 const bodyParser=require('body-parser');
 
@@ -16,7 +19,9 @@ app.use(cors());
 app.use(bodyParser.json()); 
 
 app.use(express.json());
-
+ 
+// app.use(busboy({ immediate: true }));
+// app.use(formidable());
 app.use('/api' ,routes);
 // Handling Errors
 app.use((err, req, res, next) => {
