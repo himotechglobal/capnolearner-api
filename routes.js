@@ -15,6 +15,8 @@ const { getRecordingList } = require('./controllers/getRecordingController');
 const { getHardwareProfileList, updateHardwareProfile } = require('./controllers/hardwareProfileController');
 
 const { getUser } = require('./controllers/getUserController');
+const { getAllForms } = require('./models/blankFormModel');
+const { getAllForm, getClientForm } = require('./controllers/formController');
   
 
 // Login
@@ -54,6 +56,10 @@ router.get('/session/data',auth, getSessionSignalData) // get session data list
 router.get('/session/info',auth, getSessionInfo) // get session data list 
 router.get('/session/data/type',auth, getAllDataByType) // get session data list 
 
+//Forms
+router.get('/forms/blank',auth, getAllForm) // get session data list 
+router.get('/forms/client',auth, getClientForm) // get session data list 
+
 
 //Reports
 router.get('/configured/report',auth, getConfigList) // get pre-config list 
@@ -66,7 +72,9 @@ router.get('/report/multiple',auth, getMultileReport) // get pre-config report c
 router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
 router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
 router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
-  
+
+
+
 // Group
 router.get('/group', getGroupList)
 router.get('/group/:id', getGroupByID)
