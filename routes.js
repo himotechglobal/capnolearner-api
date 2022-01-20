@@ -16,7 +16,7 @@ const { getHardwareProfileList, updateHardwareProfile } = require('./controllers
 
 const { getUser } = require('./controllers/getUserController');
 const { getAllForms } = require('./models/blankFormModel');
-const { getAllForm, getClientForm } = require('./controllers/formController');
+const { getAllForm, getClientForm, uploadForm } = require('./controllers/formController');
   
 
 // Login
@@ -59,6 +59,7 @@ router.get('/session/data/type',auth, getAllDataByType) // get session data list
 //Forms
 router.get('/forms/blank',auth, getAllForm) // get session data list 
 router.get('/forms/client',auth, getClientForm) // get session data list 
+router.post('/forms/upload',auth, uploadForm) // get session data list 
 
 
 //Reports

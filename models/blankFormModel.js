@@ -11,7 +11,7 @@ var BlankForms = function(blankform) {
 
 // get all blank forms 
 BlankForms.getAllForms = (data,result) => {
-    dbConn.query('SELECT * FROM blank_forms where type = ? AND status = 1 ',[data.type], (err, res) => {
+    dbConn.query('SELECT * FROM blank_forms where   status = 1 ',[data.type], (err, res) => {
       if (err) {
         result(null, err)
       } else {
