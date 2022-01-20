@@ -26,7 +26,7 @@ SessionData.getAllData = (data,result) => {
 // SessionData all Client 
 SessionData.getAllDataByType = (data,result) => {
    
-  dbConn.query('SELECT * FROM capno_data WHERE   sessionid = ? AND  type = ?   order by `id` desc', [md5(data.session_id) ,data.type],  (err, res) => {
+  dbConn.query('SELECT * FROM capno_data WHERE   sessionid = ? AND  data_type = ?   order by `id` desc', [md5(data.session_id) ,data.type],  (err, res) => {
       if (err) {
         result(null, err)
       } else {
