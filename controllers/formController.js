@@ -19,8 +19,8 @@ exports.getAllForm = (req, res) => {
 
 // get all client form
 exports.getClientForm = (req, res) => {
- 
-    ClientForms.getAllForms(req.query,(err, forms) => {
+    if(req.query.form_id){
+        ClientForms.getAllForms(req.query,(err, forms) => {
             if(err)
             throw new Error(err)
             return res.status(200).json({ 
@@ -28,8 +28,19 @@ exports.getClientForm = (req, res) => {
                 forms
             })
         })
+    }
+   else{
+    ClientForms.getAllClientForms(req.query,(err, forms) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            forms
+        })
+    })
+   }
     
    
 }
 
-  
+ 
