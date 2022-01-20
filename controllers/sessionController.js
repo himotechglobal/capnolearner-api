@@ -33,6 +33,36 @@ exports.getSessionAllData = (req, res) => {
 
 }
 
+// get all Session Dat by Type
+exports.getAllDataByType = (req, res) => {
+ 
+    SessionData.getAllDataByType(req.query,(err, sessions) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            sessions
+        })
+    })
+
+
+}
+ 
+// get all Session Images
+exports.getSessionAllImages = (req, res) => {
+ 
+    SessionData.getAllImages(req.query,(err, sessions) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            sessions
+        })
+    })
+
+
+}
+
 // get   Session Info
 exports.getSessionInfo = (req, res) => {
  

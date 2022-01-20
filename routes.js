@@ -7,7 +7,7 @@ const auth = require("./middleware/auth")
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupList, getGroupByID, createNewGroup, updateGroup, deleteGroup } = require('./controllers/groupController');
-const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo } = require('./controllers/sessionController');
+const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getAllDataByType } = require('./controllers/sessionController');
 const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf } = require('./controllers/reportController');
 
 const { getOwnerList, updateOwner } = require('./controllers/editAdminProfileController');
@@ -52,7 +52,8 @@ router.get('/session/record',auth, getRecordList) // get record list
 router.get('/session/data/all',auth, getSessionAllData) // get session data list 
 router.get('/session/data',auth, getSessionSignalData) // get session data list 
 router.get('/session/info',auth, getSessionInfo) // get session data list 
- 
+router.get('/session/data/type',auth, getAllDataByType) // get session data list 
+
 
 //Reports
 router.get('/configured/report',auth, getConfigList) // get pre-config list 
@@ -61,6 +62,8 @@ router.get('/report/config',auth, getReportConfig) // get pre-config report conf
 router.get('/report/saved/config',auth, getSavedReportConfig) // get pre-config report config
 router.get('/report/single',auth, getSingleReport) // get pre-config report config
 router.get('/report/single/pdf',auth, getSingleReportPdf) // get pre-config report config
+router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
+router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
 router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
 router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
   

@@ -23,7 +23,19 @@ SessionData.getAllData = (data,result) => {
       }
     })
 } 
+// SessionData all Client 
+Session.getAllDataByType = (data,result) => {
+   
+  dbConn.query('SELECT * FROM capno_data WHERE   sessionid = ? AND  type = ?   order by `id` desc', [md5(data.session_id) ,data.type],  (err, res) => {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    })
 
+
+} 
 // get all session signal wise data 
 SessionData.getSignalData = (data,result) => {
     dbConn.query('SELECT * FROM capno_data where signal_type = ? AND sessionid = ? AND data_type = 1',[data.signal_name,md5(data.session_id)], (err, res) => {
