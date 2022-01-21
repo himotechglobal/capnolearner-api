@@ -62,7 +62,7 @@ router.get('/forms/client',auth, getClientForm) // get session data list
 router.get('/forms/trainer',auth, getTrainerForm) // get session data list 
 router.post('/forms/client/upload',auth, uploadClientForm) // get session data list 
 router.post('/homework/client/upload',auth, uploadClientHomework) // get session data list 
-router.get('/homework/client', getClientHomework) // get session data list 
+router.get('/homework/client',auth, getClientHomework) // get session data list 
 router.post('/forms/trainer/upload',auth, uploadTrainerForm) // get session data list 
 
 
