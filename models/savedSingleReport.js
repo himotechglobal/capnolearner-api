@@ -27,4 +27,18 @@ SavedSingleReport.getAllReport = (data,result) => {
   
 } 
  
+// get all Client 
+SavedSingleReport.getAllNotes = (data,result) => {
+   
+  dbConn.query('SELECT notes FROM client_session_report WHERE   session_id = ?  and notes is not NULL && notes != ""  order by `id` desc', [data.session_id],  (err, res) => {
+      if (err) {
+        result(err, err)
+      } else {
+        result(null, res)
+      }
+    })
+
+
+} 
+
 module.exports = SavedSingleReport

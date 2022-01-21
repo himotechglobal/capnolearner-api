@@ -8,15 +8,15 @@ const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupList, getGroupByID, createNewGroup, updateGroup, deleteGroup } = require('./controllers/groupController');
 const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getAllDataByType } = require('./controllers/sessionController');
-const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf } = require('./controllers/reportController');
+const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf,getAllNotes } = require('./controllers/reportController');
 
 const { getOwnerList, updateOwner } = require('./controllers/editAdminProfileController');
 const { getRecordingList } = require('./controllers/getRecordingController');
 const { getHardwareProfileList, updateHardwareProfile } = require('./controllers/hardwareProfileController');
 
 const { getUser } = require('./controllers/getUserController');
-const { getAllForms } = require('./models/blankFormModel');
-const { getAllForm, getClientForm, uploadForm,getTrainerForm } = require('./controllers/formController');
+// const { getAllForms } = require('./models/blankFormModel');
+const { getAllForm, getClientForm, uploadClientForm,uploadClientHomework,uploadTrainerForm,getTrainerForm,getClientHomework } = require('./controllers/formController');
   
 
 // Login
@@ -60,8 +60,10 @@ router.get('/session/data/type',auth, getAllDataByType) // get session data list
 router.get('/forms/blank',auth, getAllForm) // get session data list 
 router.get('/forms/client',auth, getClientForm) // get session data list 
 router.get('/forms/trainer',auth, getTrainerForm) // get session data list 
-router.post('/forms/client/upload',auth, uploadForm) // get session data list 
-// router.post('/forms/client/upload',auth, uploadForm) // get session data list 
+router.post('/forms/client/upload',auth, uploadClientForm) // get session data list 
+router.post('/homework/client/upload',auth, uploadClientHomework) // get session data list 
+router.get('/homework/client', getClientHomework) // get session data list 
+router.post('/forms/trainer/upload',auth, uploadTrainerForm) // get session data list 
 
 
 //Reports
@@ -73,8 +75,9 @@ router.get('/report/single',auth, getSingleReport) // get pre-config report conf
 router.get('/report/single/pdf',auth, getSingleReportPdf) // get pre-config report config
 router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
 router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
-router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
-router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
+// router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
+// router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
+router.get('/report/notes', getAllNotes) // get pre-config report config
 
 
 

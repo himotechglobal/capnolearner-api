@@ -1,6 +1,7 @@
 const BlankForms = require('../models/blankFormModel')
 const ClientForms = require('../models/clientFormModel')
 const TrainerForms = require('../models/trainerFormModel')
+const ClientHomework = require('../models/clientHomeworkModel')
 const jsftp = require("jsftp");
 const fs = require("fs");
 require('dotenv').config()
@@ -47,6 +48,7 @@ exports.getClientForm = (req, res) => {
 }
 
 
+
 // get all client form
 exports.getTrainerForm = (req, res) => {
     
@@ -64,8 +66,67 @@ exports.getTrainerForm = (req, res) => {
 }
 
 
+
+exports.getClientHomework = (req, res) => {
  
-exports.uploadForm = (req, res) => {
+    
+    ClientHomework.getAllHomework(req.query,(err, homeworks) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            homeworks
+        })
+    })
+                 
+
+}
+
+exports.uploadClientHomework = (req, res) => {
+ 
+    var form = new formidable.IncomingForm();
+ 
+    form.parse(req, function (err, fields, files) {
+   
+        var oldpath = files.form.filepath;
+        var fileName = files.form.originalFilename
+        let _name = Math.floor(Math.random() * 100).toString() +  new Date().getTime().toString() + fileName.replace(/\s+/g, "-") ; 
+        let _remote = "/homework/"+ _name; 
+         fs.readFile(oldpath, function(err, buffer) {
+        if(err) {
+            console.error(err);
+          
+        }
+        else {
+            Ftp.put(buffer, _remote, err => {
+               
+                    if(err){
+                        throw new Error(err)
+                    }
+                    else{
+               dbConn.query('INSERT INTO `homework`( `cl_id`, `file_name`, `file`, `status` , `sessionid` ) VALUES (?,?,?,1,?) ',[md5(fields.client_id),_name,_name,md5(fields.session_id)], (err, result) => {
+                            if (err) {
+                                return res.status(200).json({ 
+                                    status: false,
+                                    message : "not uploaded"
+                                })
+                            } else {
+                                return res.status(200).json({ 
+                                    status: true,
+                                    message : "uploaded"
+                                })
+                            }
+                          })
+                    }
+            });
+       }
+    });
+});
+    
+
+}
+
+exports.uploadClientForm = (req, res) => {
  
     var form = new formidable.IncomingForm();
  
@@ -88,6 +149,51 @@ exports.uploadForm = (req, res) => {
                     }
                     else{
                dbConn.query('INSERT INTO `client_form`( `cl_id`, `form_name`, `form`, `status`) VALUES (?,?,?,1) ',[md5(fields.client_id),fields.form_id,_name], (err, result) => {
+                            if (err) {
+                                return res.status(200).json({ 
+                                    status: false,
+                                    message : "not uploaded"
+                                })
+                            } else {
+                                return res.status(200).json({ 
+                                    status: true,
+                                    message : "uploaded"
+                                })
+                            }
+                          })
+                    }
+            });
+       }
+    });
+});
+    
+
+}
+
+ 
+exports.uploadTrainerForm = (req, res) => {
+ 
+    var form = new formidable.IncomingForm();
+ 
+    form.parse(req, function (err, fields, files) {
+   
+        var oldpath = files.form.filepath;
+        var fileName = files.form.originalFilename
+        let _name = Math.floor(Math.random() * 100).toString() +  new Date().getTime().toString() + fileName.replace(/\s+/g, "-") ; 
+        let _remote = "/practioner_forms/"+ _name; 
+         fs.readFile(oldpath, function(err, buffer) {
+        if(err) {
+            console.error(err);
+          
+        }
+        else {
+            Ftp.put(buffer, _remote, err => {
+               
+                    if(err){
+                        throw new Error(err)
+                    }
+                    else{
+               dbConn.query('INSERT INTO `practioner_form`( `clientid`,`sessid`, `form_name`, `form`, `status`) VALUES (?,?,?,?,1) ',[fields.client_id,fields.session_id,fields.form_id,_name], (err, result) => {
                             if (err) {
                                 return res.status(200).json({ 
                                     status: false,

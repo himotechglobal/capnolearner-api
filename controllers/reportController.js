@@ -52,6 +52,20 @@ exports.getSavedReportConfig = (req, res) => {
    
 }
 
+exports.getAllNotes = (req, res) => {
+ 
+    SavedSingleReport.getAllNotes(req.query,(err, notes) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                notes
+            })
+        })
+    
+    
+}
+
 exports.getSingleReport = (req, res) => {
  
     SavedSingleReport.getAllReport(req.query,(err, reports) => {
