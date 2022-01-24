@@ -73,6 +73,7 @@ Client.getAllClientOwner = (data,result) => {
           })
     }
     else{
+      console.log('SELECT * FROM capno_users WHERE  user_type= 3   AND  (associated_owner = '+md5(data.user_id)+' OR associated_practioner = '+md5(data.user_id)+')  order by `firstname` asc')
         dbConn.query('SELECT * FROM capno_users WHERE  user_type= ?   AND  (associated_owner = ? OR associated_practioner = ?)  order by `firstname` asc', [data.user_type,md5(data.user_id),md5(data.user_id)],  (err, res) => {
             if (err) {
               result(null, err)

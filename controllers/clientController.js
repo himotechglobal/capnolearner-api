@@ -5,7 +5,7 @@ const sendEmail = require('./emailController')
 
 // get all Client list
 exports.getClientList = (req, res) => {
-    if(req.query.trainer){
+    if(req.query.trainer === "true"){
         Client.getAllClientTrainer(req.query,(err, clients) => {
             if(err)
             throw new Error(err)

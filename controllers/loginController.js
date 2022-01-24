@@ -41,12 +41,19 @@ exports.login = async (req,res,next) =>{
                   expiresIn: "2h",
                 }
               );
-
+              let associated_owner = md5(rowResult[0].id);
+              let associated_practioner = md5(rowResult[0].id);
+            
+            if(rowResult[0].user_type > 1){
+                associated_owner = rowResult[0].associated_owner
+            }
               
             return res.json({
                 status: true,
                 user_id: rowResult[0].id,
                 user_type: rowResult[0].user_type,
+                associated_owner: associated_owner,
+                associated_practioner:  associated_practioner,
                 accessToken: token
             });
         }

@@ -42,7 +42,7 @@ router.put('/trainer/update/:id', updateTrainer) // edit trainer by id
 router.delete('/trainer/delete/:id', deleteTrainer) // delete trainer by id
 
 // Client
-router.get('/clients',auth, getClientList) // get client list 
+router.get('/clients', getClientList) // get client list 
 router.get('/client/profile/:id', getClientByID) // get client by id
 router.post('/client/create', createNewClient) // insert new client
 router.post('/client/update/:id', updateClient) // edit client by id
