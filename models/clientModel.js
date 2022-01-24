@@ -8,7 +8,6 @@ var Client = function(client) {
     this.firstname = client.firstname
     this.lastname = client.lastname
     this.email = client.email
-    this.password = client.password
     this.gender = client.gender
     this.age = client.age
     this.address = client.address
@@ -21,11 +20,21 @@ var Client = function(client) {
     this.telephone = client.telephone
     this.profession = client.profession  
     this.education = client.education
+    this.associated_owner = client.associated_owner
+    this.associated_practioner = client.associated_practioner
     this.status = status
     this.user_type = user_type
     this.login = new Date()
     this.created = new Date()
     this.modified = new Date()
+  // console.log(client.password);
+  
+    if (typeof client.password === 'undefined' ||  client.password == '') {
+      client.password = 111111 + Math.floor(Math.random() * 999999);
+    }
+    
+    this.password = client.password
+
 }
 
 // get all Client 
@@ -110,11 +119,10 @@ Client.createNewClient = (data, result) => {
 
 // update Client
 Client.updateClient = (id, data, result) => {
-    dbConn.query("UPDATE capno_users SET firstname=?,lastname=?,email=?,password=?,gender=?,age=?,address=?,address2=?,city=?,state=?,country=?,zipcode=?,complaint=?,telephone=?,profession=?,education=? WHERE id = ? AND user_type=3", [
+    dbConn.query("UPDATE capno_users SET firstname=?,lastname=?,email=?,gender=?,age=?,address=?,address2=?,city=?,state=?,country=?,zipcode=?,complaint=?,telephone=?,profession=?,education=? WHERE id = ? AND user_type=3", [
         data.firstname,
         data.lastname,
         data.email,
-        data.password,
         data.gender,
         data.age,
         data.address,

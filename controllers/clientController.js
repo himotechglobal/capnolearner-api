@@ -1,4 +1,6 @@
 const Client = require('../models/clientModel')
+const dbConn = require('../dbConnection')
+const sendEmail = require('./emailController')
 
 
 // get all Client list
@@ -8,7 +10,7 @@ exports.getClientList = (req, res) => {
             if(err)
             throw new Error(err)
             return res.status(200).json({ 
-                status: true,
+                status: true, 
                 clients
             })
         })
@@ -42,7 +44,7 @@ exports.getClientByID = (req,res) => {
 
 // create new Client
 exports.createNewClient = (req, res) => {
-    // console.log(req.body)
+    // console.log(req)
     const data = new Client(req.body)
 
     // check null
@@ -52,29 +54,56 @@ exports.createNewClient = (req, res) => {
             message: 'Please fill all fields'
         })
     } else {
-        Client.createNewClient(data, (err, Client) => {
-            if(err) {
-                res.send(err)
-                res.json({
+        dbConn.query('SELECT * FROM capno_users WHERE email = ?', [req.body.email] , (err, result) => {
+            if (err) {
+                res.status(500).json({
                     success: false,
-                    message: "Somothing went wrong",
-                    data: Client
+                    message: 'DB error',
                 })
             } else {
-                res.status(201).json({
-                    success: true,
-                    message: 'Client Inserted Successfully',
-                    data
+               if(result.length > 0){
+                res.status(400).json({
+                    success: false,
+                    message: 'Account already exist with this email',
                 })
+               }
+               else{
+                Client.createNewClient(data, (err, Client) => {
+                    if(err) {
+                        res.send(err)
+                        res.json({
+                            success: false,
+                            message: "Somothing went wrong",
+                            data: Client
+                        })
+                    } else {
+                        let email = true ; 
+                        if(req.body.sendemail){
+                            email  = sendEmail(req.body.firstname,req.body.email,3) ;
+                                
+                        }
+                       
+                            res.status(201).json({
+                                success: true,
+                                message: 'Client Inserted Successfully',
+                                email: email,
+                            })
+                        
+                        
+                       
+                    }
+                })
+               }
             }
-        })
+          })
+       
     }
 }
 
 // update Client
 exports.updateClient = (req, res)=>{
     const data = new Client(req.body);
-    console.log('data update', data);
+    console.log('data update', req.params);
     // check null
     if(req.body.constructor === Object && Object.keys(req.body).length === 0){
         res.send(400).send({
@@ -82,15 +111,35 @@ exports.updateClient = (req, res)=>{
             message: 'Please fill all fields'
         });
     }else{
-        Client.updateClient(req.params.id, data, (err, Client)=>{
-            if(err)
-            res.send(err);
-            res.json({
-                status: true,
-                message: 'Client updated Successfully',
-            })
-        })
+        dbConn.query('SELECT * FROM capno_users WHERE email = ? and id != ?', [req.body.email,req.params.id] , (err, result) => {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: 'DB error',
+                    error: err
+                })
+            } else {
+               if(result.length > 0){
+                res.status(400).json({
+                    success: false,
+                    message: 'Account already exist with this email',
+                })
+               }
+               else{
+                Client.updateClient(req.params.id, data, (err, Client)=>{
+                    if(err)
+                    res.send(err);
+                    res.json({
+                        status: true,
+                        message: 'Client updated Successfully',
+                    })
+                })
+               }
+       
+
     }
+})
+}
 }
 
 // delete Client

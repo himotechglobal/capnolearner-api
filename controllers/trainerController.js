@@ -1,5 +1,8 @@
 const Trainer = require('../models/trainerModel')
-
+const Client = require('../models/clientModel')
+const dbConn = require('../dbConnection')
+const sendEmail = require('./emailController')
+ 
 
 // get all Trainer list
 exports.getTrainerList = (req, res) => {
@@ -38,21 +41,62 @@ exports.createNewTrainer = (req, res) => {
             message: 'Please fill all fields'
         })
     } else {
+        dbConn.query('SELECT * FROM capno_users WHERE email = ?', [req.body.email] , (err, result) => {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: 'DB error',
+                })
+            } else {
+               if(result.length > 0){
+                res.status(400).json({
+                    success: false,
+                    message: 'Account already exist with this email',
+                })
+               }
+               else{
         Trainer.createNewTrainer(data, (err, trainer) => {
             if(err) {
                 res.send(err)
                 res.json({
                     success: false,
                     message: "Somothing went wrong",
-                    data: trainer
                 })
             } else {
-                res.status(201).json({
-                    success: true,
-                    message: 'Trainer Inserted Successfully',
-                    trainer
-                })
+                let email = true ; 
+                if(req.body.sendemail){
+                    email  = sendEmail(req.body.firstname,req.body.email,2) ;
+                        
+                }
+                data.lastname =  data.lastname+"(Self)" ;
+                data.email =  data.email+"(Self)" ;
+                data.user_type = 3 ;
+                data.associated_practioner = md5(trainer.insertId) ;
+                Client.createNewClient(data, (err, trainer) => {
+                    if(err){
+                        res.status(201).json({
+                            success: true,
+                            message: 'Trainer Inserted Successfully',
+                            client : false,
+                            email: email,
+                            trainer
+                        })
+                    }
+                    else{
+                        res.status(201).json({
+                            success: true,
+                            message: 'Trainer Inserted Successfully',
+                            client : false,
+                            email: email,
+                            trainer
+                        })
+                    }
+               
+            })
             }
+        })
+    }
+}
         })
     }
 }
@@ -68,6 +112,21 @@ exports.updateTrainer = (req, res)=>{
             message: 'Please fill all fields'
         });
     }else{
+        dbConn.query('SELECT * FROM capno_users WHERE email = ? and id != ?', [req.body.email,req.params.id] , (err, result) => {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: 'DB error',
+                    error: err
+                })
+            } else {
+               if(result.length > 0){
+                res.status(400).json({
+                    success: false,
+                    message: 'Account already exist with this email',
+                })
+               }
+               else{
         Trainer.updateTrainer(req.params.id, data, (err, trainer)=>{
             if(err)
             res.send(err);
@@ -75,6 +134,9 @@ exports.updateTrainer = (req, res)=>{
                 status: true,
                 message: 'Trainer updated Successfully',
             })
+        })
+    }
+}
         })
     }
 }

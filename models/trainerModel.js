@@ -28,7 +28,7 @@ var Trainer = function(trainer) {
     this.associated_owner = trainer.associated_owner
     this.user_type = user_type 
 
-    if (typeof trainer.password !== 'undefined' || typeof trainer.password == '') {
+    if (typeof trainer.password === 'undefined' ||  trainer.password == '') {
         trainer.password = 111111 + Math.floor(Math.random() * 999999);
     }
 
@@ -96,11 +96,10 @@ Trainer.createNewTrainer = (data, result) => {
 
 // update Trainer
 Trainer.updateTrainer = (id, data, result) => {
-    dbConn.query("UPDATE capno_users SET firstname=?,lastname=?,profession=?,degreescompleted=?,year_exp=?,certificationscompleted=?,license=?,email=?,city=?,state=?,country=?,zipcode=?,telephone=?,address=?,address2=?,associated_owner=?,password=? WHERE id = ? AND user_type=2", [
+    dbConn.query("UPDATE capno_users SET firstname=?,lastname=?,profession=?,degreescompleted=?,year_exp=?,certificationscompleted=?,license=?,email=?,city=?,state=?,country=?,zipcode=?,telephone=?,address=?,address2=?,associated_owner=?  WHERE id = ? AND user_type=2", [
         data.firstname,
         data.lastname,
         data.profession,
-        data.password,
         data.degreescompleted,
         data.year_exp,
         data.certificationscompleted,
@@ -113,7 +112,6 @@ Trainer.updateTrainer = (id, data, result) => {
         data.country,
         data.zipcode,
         data.telephone,        
-        data.associated_owner,        
         id
         ], (err, res)=>{
         if(err){
