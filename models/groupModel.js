@@ -18,9 +18,23 @@ Group.getAllGroup = (result) => {
     })
 } 
 
+
+
+
+// get Group Profiles by ID
+Group.getAllGroupProfileByGroupID = (id, result) => {
+    dbConn.query('SELECT * FROM groupprofile  where groupid =  ?', md5(id), (err, res) => {
+        if (err) {
+            result(null, err)
+        } else {
+            result(null, res)
+        }
+    })
+}
+
 // get Group by ID
 Group.getAllGroupByID = (id, result) => {
-    dbConn.query('SELECT * FROM groupprofile WHERE id=?', id, (err, res) => {
+    dbConn.query('SELECT g.firstname as group_name, g.email,g.device,g.status,p.id as associated_practioner FROM capno_users as g LEFT JOIN  capno_users as p on md5(p.id) = g.associated_practioner where g.id=?', id, (err, res) => {
         if (err) {
             result(null, err)
         } else {
@@ -40,17 +54,41 @@ Group.createNewGroup = (data, result) => {
     })
 }
 
-// update Group
-Group.updateGroup = (id, data, result) => {
-    dbConn.query("UPDATE groupprofile SET firstname=?,trainer=?,serial=?,client=? WHERE id = ?", [
-        data.firstname,
-        data.trainer,
-        data.client,
-        data.serial,
+
+
+// update Group Profile
+Group.updateGroupProfile = (id, data, result) => {
+ 
+    dbConn.query("UPDATE groupprofile SET name=?,serialnumber=? WHERE id = ?", [
+        data.name,
+        data.serialnumber,
         id
         ], (err, res)=>{
         if(err){
             console.log('Error while updating the Group');
+            console.log(err);
+            result(null, err);
+        }else{
+            console.log("Group updated successfully");
+            result(null, res);
+        }
+    });
+}
+
+// update Group
+Group.updateGroup = (id, data, result) => {
+    // console.log("UPDATE capno_users SET firstname="+data.name+",email="+data.email+",associated_practioner="+data.associated_practioner+",device="+data.device+",status="+data.status+" WHERE id = "+id);
+    dbConn.query("UPDATE capno_users SET firstname=?,email=?,associated_practioner=?,device=?,status=? WHERE id = ?", [
+        data.name,
+        data.email,
+        data.associated_practioner,
+        data.device_type,
+        data.status,
+        id
+        ], (err, res)=>{
+        if(err){
+            console.log('Error while updating the Group');
+            console.log(err);
             result(null, err);
         }else{
             console.log("Group updated successfully");
@@ -61,7 +99,7 @@ Group.updateGroup = (id, data, result) => {
 
 // Delete Group
 Group.deleteGroup = (id, result)=>{
-    dbConn.query("DELETE FROM groupprofile WHERE id = ?", id, (err, res)=>{
+    dbConn.query("DELETE FROM capno_users WHERE id = ?", id, (err, res)=>{
         if(err){
             console.log('Error while deleting the Group');
             result(null, err);

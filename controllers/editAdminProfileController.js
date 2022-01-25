@@ -1,7 +1,7 @@
 const Owner = require('../models/editAdminProfileModel')
 
 // get all Admin list
-exports.getOwnerList = (req, res) => {
+exports.getOwnerProfile = (req, res) => {
     Owner.getAllOwner((err, owners) => {
         if(err)
         throw new Error(err)

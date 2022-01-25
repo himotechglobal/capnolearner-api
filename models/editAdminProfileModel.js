@@ -31,18 +31,22 @@ Owner.getAllOwner = (result) => {
 
 // update Group
 Owner.ownerUpdate = (id, data, result) => {
-    dbConn.query("UPDATE capno_users SET firstname=?,lastname=?,business=?,email=?,password=?,telephone=?,address=?,city=?,zipcode=?,state=?,country=? WHERE id = ? AND user_type = 1", [
+    dbConn.query("UPDATE capno_users SET firstname=?,lastname=?,email=?,telephone=?,address=?,address2=?,city=?,zipcode=?,state=?,country=?,qfirst=?,qsecond=?,qthird=?,qfourth=?,qfifth=? WHERE id = ? AND user_type = 1", [
         data.firstname,
         data.lastname,
-        data.business,
         data.email,
-        data.password,
         data.telephone,
         data.address,
+        data.address2,
         data.city,
         data.zipcode,
         data.state,
         data.country,
+        data.qfirst,
+        data.qsecond,
+        data.qthird,
+        data.qfourth,
+        data.qfifth,
         id
         ], (err, res)=>{
         if(err){

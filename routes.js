@@ -6,11 +6,11 @@ const { login } = require('./controllers/loginController');
 const auth = require("./middleware/auth")
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
-const { getGroupList, getGroupByID, createNewGroup, updateGroup, deleteGroup } = require('./controllers/groupController');
+const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,updateGroupProfile, deleteGroup } = require('./controllers/groupController');
 const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getAllDataByType } = require('./controllers/sessionController');
 const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf,getAllNotes } = require('./controllers/reportController');
 
-const { getOwnerList, updateOwner } = require('./controllers/editAdminProfileController');
+const { getOwnerProfile, updateOwner } = require('./controllers/editAdminProfileController');
 const { getRecordingList } = require('./controllers/getRecordingController');
 const { getHardwareProfileList, updateHardwareProfile } = require('./controllers/hardwareProfileController');
 
@@ -36,17 +36,17 @@ router.get('/getuser',getUser); // get owner list
 
 // Trainer
 router.get('/trainers',auth, getTrainerList) // get trainer list
-router.get('/trainer/profile/:id', getTrainerByID) // get trainer by id
-router.post('/trainer/create', createNewTrainer) // insert new trainer
-router.put('/trainer/update/:id', updateTrainer) // edit trainer by id
-router.delete('/trainer/delete/:id', deleteTrainer) // delete trainer by id
+router.get('/trainer/profile/:id',auth, getTrainerByID) // get trainer by id
+router.post('/trainer/create',auth, createNewTrainer) // insert new trainer
+router.put('/trainer/update/:id',auth, updateTrainer) // edit trainer by id
+router.delete('/trainer/delete/:id',auth, deleteTrainer) // delete trainer by id
 
 // Client
-router.get('/clients', getClientList) // get client list 
-router.get('/client/profile/:id', getClientByID) // get client by id
-router.post('/client/create', createNewClient) // insert new client
-router.post('/client/update/:id', updateClient) // edit client by id
-router.delete('/client/delete/:id', deleteClient) // delete client by id
+router.get('/clients',auth, getClientList) // get client list 
+router.get('/client/profile/:id',auth, getClientByID) // get client by id
+router.post('/client/create',auth, createNewClient) // insert new client
+router.post('/client/update/:id',auth, updateClient) // edit client by id
+router.delete('/client/delete/:id',auth, deleteClient) // delete client by id
 
 //Sessions
 router.get('/sessions',auth, getSessionList) // get session list 
@@ -77,20 +77,24 @@ router.get('/report/multiple',auth, getMultileReport) // get pre-config report c
 router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
 // router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
 // router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
-router.get('/report/notes', getAllNotes) // get pre-config report config
+router.get('/report/notes', auth, getAllNotes) // get pre-config report config
 
 
 
 // Group
-router.get('/group', getGroupList)
-router.get('/group/:id', getGroupByID)
-router.post('/group/create', createNewGroup)
-router.put('/group/update/:id', updateGroup)
-router.delete('/group/delete/:id', deleteGroup)
+
+router.get('/group/:id',auth, getGroupByID)
+router.post('/group/create',auth, createNewGroup)
+router.post('/group/update/:id',auth, updateGroup)
+router.post('/group/delete/:id',auth, deleteGroup)
+
+router.get('/group/profile/:id',auth, getGroupProfileByGroupID)
+router.post('/group/profile/update/:id',auth, updateGroupProfile)
+
 
 // Edit Admin Profile
 router.put('/owner/update/:id', updateOwner)
-router.get('/owner/list', getOwnerList)
+router.get('/owner/profile', getOwnerProfile)
 
 // Recodring Distributor List
 router.get('/recording/distributor', getRecordingList)
