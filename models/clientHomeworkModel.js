@@ -22,7 +22,20 @@ ClientHomework.getAllHomework = (data,result) => {
 } 
 
 
- 
+// delete homework by id
+ClientHomework.deleteClientHomework = (id, result)=>{
+  dbConn.query("DELETE FROM homework WHERE id = ?", id, (err, res)=>{
+      if(err){
+          console.log('Error while deleting the Client Homework');
+          result(null, err);
+      }else{
+          console.log("Client Homework deleted successfully");
+          result(null, res);
+      }
+  });
+}
+
+
 
 
 module.exports = ClientHomework 

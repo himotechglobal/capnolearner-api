@@ -211,6 +211,39 @@ exports.uploadTrainerForm = (req, res) => {
        }
     });
 });
-    
+
 
 }
+
+exports.deleteClientForm = (req, res)=>{
+    ClientForms.deleteClientForm(req.params.id, (err, group)=>{
+        if(err)
+        res.send(err);
+        res.json({success:true,
+             message: 'Client Form deleted successully!'
+        });
+    })
+}
+
+exports.deleteTrainerForm = (req, res)=>{
+    TrainerForms.deleteTrainerForm(req.params.id, (err, group)=>{
+        if(err)
+        res.send(err);
+        res.json({success:true,
+             message: 'Trainer Form deleted successully!'
+        });
+    })
+}
+
+exports.deleteClientHomework = (req, res)=>{
+    ClientHomework.deleteClientHomework(req.params.id, (err, group)=>{
+        if(err)
+        res.send(err);
+        res.json({success:true,
+             message: 'Client Homework deleted successully!'
+        });
+    })
+}
+
+
+

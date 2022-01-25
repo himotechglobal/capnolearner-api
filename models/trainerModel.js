@@ -126,7 +126,7 @@ Trainer.updateTrainer = (id, data, result) => {
 
 // Delete Trainer
 Trainer.deleteTrainer = (id, result)=>{
-    dbConn.query("DELETE FROM capno_users WHERE id = ?", id, (err, res)=>{
+    dbConn.query("DELETE FROM capno_users WHERE id = ? and user_type =2", id, (err, res)=>{
         if(err){
             console.log('Error while deleting the Trainer');
             result(null, err);

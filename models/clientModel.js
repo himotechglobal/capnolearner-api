@@ -150,7 +150,7 @@ Client.updateClient = (id, data, result) => {
 
 // Delete Client
 Client.deleteClient = (id, result)=>{
-    dbConn.query("DELETE FROM capno_users WHERE id = ?", id, (err, res)=>{
+    dbConn.query("DELETE FROM capno_users WHERE id = ? and user_type = 3", id, (err, res)=>{
         if(err){
             console.log('Error while deleting the Client');
             result(null, err);

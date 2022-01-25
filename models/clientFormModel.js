@@ -22,6 +22,17 @@ ClientForms.getAllForms = (data,result) => {
 
 
  
+ClientForms.deleteClientForm = (id, result)=>{
+  dbConn.query("DELETE FROM client_form WHERE id = ?", id, (err, res)=>{
+      if(err){
+          console.log('Error while deleting the Client Form');
+          result(null, err);
+      }else{
+          console.log("Client Form deleted successfully");
+          result(null, res);
+      }
+  });
+}
 
 
 module.exports = ClientForms

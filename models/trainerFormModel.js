@@ -19,9 +19,19 @@ TrainerForms.getAllForms = (data,result) => {
       }
     })
 
-
+    
  
 } 
 
-
+TrainerForms.deleteTrainerForm = (id, result)=>{
+  dbConn.query("DELETE FROM practioner_form WHERE id = ?", id, (err, res)=>{
+      if(err){
+          console.log('Error while deleting the Trainer Form');
+          result(null, err);
+      }else{
+          console.log("Trainer Form deleted successfully");
+          result(null, res);
+      }
+  });
+}
 module.exports = TrainerForms

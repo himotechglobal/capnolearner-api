@@ -29,7 +29,37 @@ Owner.getAllOwner = (result) => {
     })
 } 
 
-// update Group
+// get owner by ID 
+Owner.getOwnerById = (data,result) => {
+  // console.log(data.id);
+  dbConn.query('SELECT * FROM capno_users WHERE id= ? and  user_type=1', [data.id], (err, res) => {
+    if (err) {
+      result(null, err)
+    } else {
+      result(null, res)
+    }
+  })
+} 
+
+
+
+Owner.updateSubscriptionsDetails = (id, data, result) => {
+  dbConn.query("UPDATE capno_users SET  autoupdate=?,autorenew=? WHERE id = ?  ", [
+      data.autoupdate,
+      data.autorenew,
+      id
+      ], (err, res)=>{
+      if(err){
+          console.log(err);
+          result(null, err);
+      }else{
+          console.log("Admin Subscription updated successfully");
+          result(null, res);
+      }
+  });
+}
+
+// update Owner Profile
 Owner.ownerUpdate = (id, data, result) => {
     dbConn.query("UPDATE capno_users SET firstname=?,lastname=?,email=?,telephone=?,address=?,address2=?,city=?,zipcode=?,state=?,country=?,qfirst=?,qsecond=?,qthird=?,qfourth=?,qfifth=? WHERE id = ? AND user_type = 1", [
         data.firstname,
@@ -50,7 +80,7 @@ Owner.ownerUpdate = (id, data, result) => {
         id
         ], (err, res)=>{
         if(err){
-            console.log('Error while updating the Admin Profile');
+            console.log(err);
             result(null, err);
         }else{
             console.log("Admin Profile updated successfully");
