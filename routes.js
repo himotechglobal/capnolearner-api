@@ -7,7 +7,7 @@ const auth = require("./middleware/auth")
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,updateGroupProfile, deleteGroup } = require('./controllers/groupController');
-const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getAllDataByType } = require('./controllers/sessionController');
+const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getAllDataByType,updateZoomLink } = require('./controllers/sessionController');
 const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf,getAllNotes } = require('./controllers/reportController');
 
 const { getOwnerProfile, updateOwner,updateSubscriptionsDetails } = require('./controllers/editAdminProfileController');
@@ -55,6 +55,7 @@ router.get('/session/data/all',auth, getSessionAllData) // get session data list
 router.get('/session/data',auth, getSessionSignalData) // get session data list 
 router.get('/session/info',auth, getSessionInfo) // get session data list 
 router.get('/session/data/type',auth, getAllDataByType) // get session data list 
+router.post('/session/zoom/link/:id',auth, updateZoomLink) // get session data list 
 
 //Forms
 router.get('/forms/blank',auth, getAllForm) // get session data list 
@@ -67,52 +68,52 @@ router.post('/forms/trainer/delete/:id',auth, deleteTrainerForm) // get session 
 router.post('/homework/client/delete/:id', deleteClientHomework) // get session data list 
 router.post('/homework/client/upload',auth, uploadClientHomework) // get session data list 
 router.get('/homework/client',auth, getClientHomework) // get session data list 
-router.post('/forms/trainer/upload',auth, uploadTrainerForm) // get session data list 
+router.post('/forms/trainer/upload',auth, uploadTrainerForm) // upload trainer forms
 
 
 //Reports
-router.get('/configured/report',auth, getConfigList) // get pre-config list 
+router.get('/configured/report',auth, getConfigList) // get pre-config reports list 
 router.get('/configured/signals',auth, getMultiReportSignalList) // get multi report signals list 
 router.get('/report/config',auth, getReportConfig) // get pre-config report config
-router.get('/report/saved/config',auth, getSavedReportConfig) // get pre-config report config
-router.get('/report/single',auth, getSingleReport) // get pre-config report config
-router.get('/report/single/pdf',auth, getSingleReportPdf) // get pre-config report config
-router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
-router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
+router.get('/report/saved/config',auth, getSavedReportConfig) // get saved report config
+router.get('/report/single',auth, getSingleReport) // get single-session report
+router.get('/report/single/pdf',auth, getSingleReportPdf) // get single-session report pdf
+router.get('/report/multiple',auth, getMultileReport) // get multi-session report
+router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get multi-session report pdf
 // router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
 // router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
-router.get('/report/notes', auth, getAllNotes) // get pre-config report config
+router.get('/report/notes', auth, getAllNotes) // get  report notes
 
 
 
 // Group
 
-router.get('/group/:id',auth, getGroupByID)
-router.post('/group/create',auth, createNewGroup)
-router.post('/group/update/:id',auth, updateGroup)
-router.post('/group/delete/:id',auth, deleteGroup)
+router.get('/group/:id',auth, getGroupByID) // get group by ID
+router.post('/group/create',auth, createNewGroup) // create new group
+router.post('/group/update/:id',auth, updateGroup) // Update Group by ID
+router.post('/group/delete/:id',auth, deleteGroup) // Delete Group 
 
-router.get('/group/profile/:id',auth, getGroupProfileByGroupID)
-router.post('/group/profile/update/:id',auth, updateGroupProfile)
+router.get('/group/profile/:id',auth, getGroupProfileByGroupID) // Get Devices in Group
+router.post('/group/profile/update/:id',auth, updateGroupProfile) // Update Devices in Group by ID
 
 
 // Edit Admin Profile
-router.post('/owner/update/:id',auth, updateOwner)
-router.get('/owner/profile/:id',auth, getOwnerProfile)
-router.post('/owner/subscription/update/:id', updateSubscriptionsDetails)
+router.post('/owner/update/:id',auth, updateOwner) // Update Owner Profile
+router.get('/owner/profile/:id',auth, getOwnerProfile) //Get Owner Profile
+router.post('/owner/subscription/update/:id', updateSubscriptionsDetails) //Update owner Subscription 
 
 // Recodring Distributor List
-router.get('/recording/distributor',auth , getRecordingList)
+router.get('/recording/distributor',auth , getRecordingList) // Get Recordings by Distributor
 
 // Hardware Profile 5.0
-router.get('/device/five/profile/:owner',auth, getHardwareProfileListFive)
-router.post('/device/five/update/:id',auth, updateHardwareProfileFive)
-router.post('/device/five/register',auth, registerHardwareProfileFive)
-router.post('/device/five/delete/:id',auth, deleteHardwareProfileFive)
+router.get('/device/five/profile/:owner',auth, getHardwareProfileListFive) // Get List of 5.0 of user
+router.post('/device/five/update/:id',auth, updateHardwareProfileFive) // Update 5.0 of user
+router.post('/device/five/register',auth, registerHardwareProfileFive) // Register 5.0 of user
+router.post('/device/five/delete/:id',auth, deleteHardwareProfileFive) // Delete 5.0 of user
 
 // Hardware Profile 6.0
 
-router.get('/device/six/profile/:owner',auth, getHardwareProfileListSix)
+router.get('/device/six/profile/:owner',auth, getHardwareProfileListSix) // Get 6.0 Devices of users
 
  
 
@@ -134,8 +135,8 @@ router.get('/countries',auth, function(req, res) {
 });
 
 // get state list according to country_id
-router.post('/states',auth, function(req, res) {
-    dbConn.query('SELECT * FROM states WHERE country_id = "' + req.body.country_id + '"',
+router.get('/states',auth, function(req, res) {
+    dbConn.query('SELECT * FROM states WHERE country_id = "' + req.query.country_id + '"',
         function(err, rows, fields) {
             if (err) {
                 res.json({

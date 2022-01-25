@@ -108,3 +108,26 @@ exports.getRecordList = (req, res) => {
    
 }
  
+
+exports.updateZoomLink = (req, res) => {
+ 
+    Session.updateZoomLink(req.params.id,req.body,(err, records) => {
+            if(err){
+                return res.status(200).json({ 
+                    status: true,
+                    message: "Zoom Link Update Failed"
+
+                })
+            }
+           else{
+            return res.status(200).json({ 
+                status: true,
+                message: "Zoom Link Updated Successfully"
+            })
+           }
+            
+        })
+    
+   
+}
+
