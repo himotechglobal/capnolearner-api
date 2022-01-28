@@ -25,14 +25,25 @@ SessionData.getAllData = (data,result) => {
 } 
 // SessionData all Client 
 SessionData.getAllDataByType = (data,result) => {
-   
-  dbConn.query('SELECT * FROM capno_data WHERE   sessionid = ? AND  data_type = ?   order by `id` desc', [md5(data.session_id) ,data.type],  (err, res) => {
+   if(data.type == 2){
+    dbConn.query('SELECT * FROM capno_data WHERE   sessionid = ? AND  data_type = ?   order by `id`  desc LIMIT 0,1', [md5(data.session_id) ,data.type],  (err, res) => {
       if (err) {
         result(null, err)
       } else {
         result(null, res)
       }
     })
+   }
+   else{
+    dbConn.query('SELECT * FROM capno_data WHERE   sessionid = ? AND  data_type = ?   order by `id`  desc', [md5(data.session_id) ,data.type],  (err, res) => {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    })
+   }
+ 
 
 
 } 
