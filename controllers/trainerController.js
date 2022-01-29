@@ -2,6 +2,7 @@ const Trainer = require('../models/trainerModel')
 const Client = require('../models/clientModel')
 const dbConn = require('../dbConnection')
 const sendEmail = require('./emailController')
+const md5 = require('md5');
  
 
 // get all Trainer list
