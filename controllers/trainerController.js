@@ -72,7 +72,7 @@ exports.createNewTrainer = (req, res) => {
                 data.lastname =  data.lastname+"(Self)" ;
                 data.email =  data.email+"(Self)" ;
                 data.user_type = 3 ;
-                data.associated_practioner = md5(trainer.insertId.tString()) ;
+                data.associated_practioner = md5(trainer.insertId.toString()) ;
                 Client.createNewClient(data, (err, trainer) => {
                     if(err){
                         res.status(201).json({
