@@ -45,7 +45,7 @@ exports.getClientByID = (req,res) => {
 
 // create new Client
 exports.createNewClient = (req, res) => {
-    // console.log(req)
+    console.log(req)
     const data = new Client(req.body)
 
     // check null
