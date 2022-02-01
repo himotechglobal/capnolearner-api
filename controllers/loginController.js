@@ -42,8 +42,9 @@ exports.login = async (req,res,next) =>{
                   expiresIn: "2h",
                 }
               );
-              let associated_owner = md5(rowResult[0].id);
-              let associated_practioner = md5(rowResult[0].id);
+              let associated_owner =  md5(rowResult[0].id.toString());
+            //   console.log(md5(2));
+              let associated_practioner = md5(rowResult[0].id.toString());
             
             if(rowResult[0].user_type > 1){
                 associated_owner = rowResult[0].associated_owner
