@@ -105,7 +105,7 @@ exports.createNewTrainer = (req, res) => {
 // update Trainer
 exports.updateTrainer = (req, res)=>{
     const data = new Trainer(req.body);
-    console.log('data update', data);
+    console.log('data update', req.params.id);
     // check null
     if(req.body.constructor === Object && Object.keys(req.body).length === 0){
         res.send(400).send({
