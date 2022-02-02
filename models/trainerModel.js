@@ -105,13 +105,14 @@ Trainer.updateTrainer = (id, data, result) => {
         data.certificationscompleted,
         data.license,
         data.email,
-        data.address,
-        data.address2,
         data.city,
         data.state,
         data.country,
         data.zipcode,
-        data.telephone,        
+        data.telephone,      
+        data.address,
+        data.address2,  
+        data.associated_owner,
         id
         ], (err, res)=>{
         if(err){
