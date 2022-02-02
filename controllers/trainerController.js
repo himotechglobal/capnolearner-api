@@ -129,12 +129,21 @@ exports.updateTrainer = (req, res)=>{
                }
                else{
         Trainer.updateTrainer(req.params.id, data, (err, trainer)=>{
-            if(err)
-            res.send(err);
-            res.json({
-                status: true,
-                message: 'Trainer updated Successfully',
-            })
+            if(err){
+                res.status(500).json({
+                    success: false,
+                    message: 'DB error',
+                    error: err
+                })
+            }
+            else{
+                res.status(200).json({
+                    status: true,
+                    message: 'Trainer updated Successfully',
+                })
+            }
+           
+           
         })
     }
 }
