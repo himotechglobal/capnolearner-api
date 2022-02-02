@@ -116,10 +116,11 @@ Trainer.updateTrainer = (id, data, result) => {
         ], (err, res)=>{
         if(err){
             console.log('Error while updating the Trainer');
-            result(null, err);
+            console.log(err);
+            result(err,res);
         }else{
             console.log("Trainer updated successfully");
-            result(null, res);
+            result(err,res);
         }
     });
 }
