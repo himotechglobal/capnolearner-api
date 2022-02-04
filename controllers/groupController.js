@@ -64,7 +64,7 @@ exports.createNewGroup = (req, res) => {
         groupProfile['email']  = data.email ;
         groupProfile['password']  = 111111 + Math.floor(Math.random() * 999999); 
         groupProfile['associated_owner']  = data.associated_owner ;
-        groupProfile['associated_practioner']  = data.associated_practioner ;
+        groupProfile['associated_practioner']  = md5(data.associated_practioner) ;
         groupProfile['user_type']  = 4 ;
         groupProfile['device']  = data.device_type ;
         groupProfile['status']  = 1 ;

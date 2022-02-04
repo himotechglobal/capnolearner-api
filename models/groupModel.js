@@ -77,7 +77,7 @@ Group.updateGroupProfile = (id, data, result) => {
 
 // update Group
 Group.updateGroup = (id, data, result) => {
-    // console.log("UPDATE capno_users SET firstname="+data.name+",email="+data.email+",associated_practioner="+data.associated_practioner+",device="+data.device+",status="+data.status+" WHERE id = "+id);
+    console.log("UPDATE capno_users SET firstname="+data.name+",email="+data.email+",associated_practioner="+md5(data.associated_practioner)+",device="+data.device+",status="+data.status+" WHERE id = "+id);
     dbConn.query("UPDATE capno_users SET firstname=?,email=?,associated_practioner=?,device=?,status=? WHERE id = ?", [
         data.name,
         data.email,
