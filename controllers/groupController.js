@@ -137,7 +137,7 @@ exports.updateGroupProfile = (req, res)=>{
        
         Group.updateGroupProfile(req.params.id, data, (err, group)=>{
             if(err){
-                res.status(200).json({
+                res.status(400).json({
 
                     status: false,
                     message: err,

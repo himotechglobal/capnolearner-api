@@ -34,7 +34,7 @@ Group.getAllGroupProfileByGroupID = (id, result) => {
 
 // get Group by ID
 Group.getAllGroupByID = (id, result) => {
-    dbConn.query('SELECT g.firstname as group_name, g.email,g.device,g.status,p.id as associated_practioner FROM capno_users as g LEFT JOIN  capno_users as p on md5(p.id) = g.associated_practioner where g.id=?', id, (err, res) => {
+    dbConn.query('SELECT g.firstname as group_name, g.email,g.device,g.status,g.associated_practioner FROM capno_users as g LEFT JOIN  capno_users as p on md5(p.id) = g.associated_practioner where g.id=?', id, (err, res) => {
         if (err) {
             result(null, err)
         } else {
@@ -81,7 +81,7 @@ Group.updateGroup = (id, data, result) => {
     dbConn.query("UPDATE capno_users SET firstname=?,email=?,associated_practioner=?,device=?,status=? WHERE id = ?", [
         data.name,
         data.email,
-        data.associated_practioner,
+        md5(data.associated_practioner),
         data.device_type,
         data.status,
         id
