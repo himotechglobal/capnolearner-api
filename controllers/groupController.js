@@ -82,7 +82,7 @@ exports.createNewGroup = (req, res) => {
                 success = false
            let arrayData = [] ;    
         data.devices.map((v,i) => {
-            arrayData.push([md5(result.insertId),v.name,v.serialnumber]);
+            arrayData.push([md5(result.insertId.toString()),v.name,v.serialnumber]);
         })
 
         var sql = "INSERT INTO groupprofile (groupid, name, serialnumber) VALUES ?";
