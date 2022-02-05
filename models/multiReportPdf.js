@@ -16,7 +16,7 @@ MultiReportPdf.getAllPdf = (data,result) => {
    
         dbConn.query('SELECT * FROM multisession_data_report_pdf WHERE   cid = ?    order by `id` desc', [data.session_id],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }

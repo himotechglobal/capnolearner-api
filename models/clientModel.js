@@ -43,7 +43,7 @@ Client.getAllClientTrainer = (data,result) => {
     
         dbConn.query('SELECT * FROM capno_users WHERE   status = ? AND  associated_practioner = ? and user_type= ?  order by `firstname` asc', [data.status , md5(data.user_id),data.user_type],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }
@@ -52,7 +52,7 @@ Client.getAllClientTrainer = (data,result) => {
     else{
         dbConn.query('SELECT * FROM capno_users WHERE  user_type=?  AND  associated_practioner = ?  order by `firstname` asc', [data.user_type,md5(data.user_id)],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }``
@@ -66,7 +66,7 @@ Client.getAllClientOwner = (data,result) => {
     
         dbConn.query('SELECT * FROM capno_users WHERE   status = ? AND (associated_owner = ? OR associated_practioner = ?) and user_type= ?   order by `firstname` asc', [data.status , md5(data.user_id),md5(data.user_id) ,data.user_type],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }
@@ -76,7 +76,7 @@ Client.getAllClientOwner = (data,result) => {
       console.log('SELECT * FROM capno_users WHERE  user_type= 3   AND  (associated_owner = '+md5(data.user_id)+' OR associated_practioner = '+md5(data.user_id)+')  order by `firstname` asc')
         dbConn.query('SELECT * FROM capno_users WHERE  user_type= ?   AND  (associated_owner = ? OR associated_practioner = ?)  order by `firstname` asc', [data.user_type,md5(data.user_id),md5(data.user_id)],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }``
@@ -89,7 +89,7 @@ Client.getAllClientOwner = (data,result) => {
 Client.getAllInactiveClient = (result) => {
     dbConn.query('SELECT * FROM capno_users WHERE user_type=3 AND status = 2', (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }
@@ -100,7 +100,8 @@ Client.getAllInactiveClient = (result) => {
 Client.getAllClientByID = (id, result) => {
     dbConn.query('SELECT * FROM capno_users WHERE id=? AND user_type=3', id, (err, res) => {
         if (err) {
-            result(null, err)
+          result(err ,null);
+
         } else {
             result(null, res)
         }
@@ -111,7 +112,7 @@ Client.getAllClientByID = (id, result) => {
 Client.createNewClient = (data, result) => {
     dbConn.query('INSERT INTO capno_users SET ? ', data, (err, res) => {
         if (err) {
-            result(null, err)
+            result(err ,null);
         } else {
             result(null, res)
         }
@@ -140,7 +141,8 @@ Client.updateClient = (id, data, result) => {
         ], (err, res)=>{
         if(err){
             console.log('Error while updating the Client');
-            result(null, err);
+            result(err ,null);
+
         }else{
             console.log("Client updated successfully");
             result(null, res);
@@ -150,10 +152,10 @@ Client.updateClient = (id, data, result) => {
 
 // Delete Client
 Client.deleteClient = (id, result)=>{
-    dbConn.query("DELETE FROM capno_users WHERE id = ? and user_type = 3", id, (err, res)=>{
+    dbConn.query("UPDATE capno_users SET deleted = 1 WHERE id = ? and user_type = 3", id, (err, res)=>{
         if(err){
             console.log('Error while deleting the Client');
-            result(null, err);
+            result(err, null);
         }else{
             console.log("Client deleted successfully");
             result(null, res);

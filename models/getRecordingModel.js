@@ -10,7 +10,7 @@ var Recording = function(recording) {
 Recording.getAllRecording = (result) => {
     dbConn.query('SELECT * FROM recordingc', (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }

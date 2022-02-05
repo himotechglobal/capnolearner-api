@@ -18,7 +18,7 @@ var HardwareProfileFive = function(hardware) {
 HardwareProfileFive.getAllHardwareProfileFive = (data,result) => {
     dbConn.query('SELECT * FROM owner_serial where owner_id = ? ', md5(data.owner) ,  (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }
@@ -35,7 +35,7 @@ HardwareProfileFive.registerHardwareProfileFive = (data, result) => {
       ], (err, res)=>{
       if(err){
           // console.log('Error while updating the Hardware Profile');
-          result(null, err);
+          result(err ,null);;
       }else{
           // console.log("Hardware Profile updated successfully");
           result(null, res);
@@ -53,7 +53,7 @@ HardwareProfileFive.updateHardwareProfileFive = (id, data, result) => {
       ], (err, res)=>{
       if(err){
           console.log('Error while updating the Hardware Profile');
-          result(null, err);
+          result(err ,null);;
       }else{
           console.log("Hardware Profile updated successfully");
           result(null, res);
@@ -65,10 +65,10 @@ HardwareProfileFive.updateHardwareProfileFive = (id, data, result) => {
 
 // Delete hardware profile
 HardwareProfileFive.deleteHardwareProfileFive = (id, result)=>{
-  dbConn.query("DELETE FROM owner_serial WHERE id = ?", id, (err, res)=>{
+  dbConn.query("UPDATE owner_serial SET deleted = 1 WHERE id = ?", id, (err, res)=>{
       if(err){
           console.log('Error while deleting the Group');
-          result(null, err);
+          result(err,null);
       }else{
           console.log("Hardware Profile deleted successfully");
           result(null, res);

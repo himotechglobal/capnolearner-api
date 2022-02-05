@@ -41,7 +41,7 @@ Trainer.getAllTrainer = (data,result) => {
     if(data.status){
         dbConn.query('SELECT * FROM capno_users WHERE   status = ? AND ((associated_owner = ? and user_type=2 ) OR ( id = ? and user_type=1  )) order by `firstname` asc', [data.status , md5(data.user_id),data.user_id],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }
@@ -50,7 +50,7 @@ Trainer.getAllTrainer = (data,result) => {
     else{
         dbConn.query('SELECT * FROM capno_users WHERE   (associated_owner = ? and user_type=2 ) OR ( id = ? and user_type=1  ) order by `firstname` asc', [md5(data.user_id),data.user_id],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }
@@ -65,7 +65,7 @@ Trainer.getAllTrainer = (data,result) => {
 Trainer.getSingleTrainer = (result) => {
     dbConn.query('SELECT * FROM capno_users WHERE user_type=2 AND status = 2', (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }
@@ -76,7 +76,7 @@ Trainer.getSingleTrainer = (result) => {
 Trainer.getAllTrainerByID = (id, result) => {
     dbConn.query('SELECT * FROM capno_users WHERE id=? AND user_type=2', id, (err, res) => {
         if (err) {
-            result(null, err)
+            result(err ,null);
         } else {
             result(null, res)
         }
@@ -87,7 +87,7 @@ Trainer.getAllTrainerByID = (id, result) => {
 Trainer.createNewTrainer = (data, result) => {
     dbConn.query('INSERT INTO capno_users SET ? ', data, (err, res) => {
         if (err) {
-            result(null, err)
+            result(err ,null);
         } else {
             result(null, res)
         }
@@ -128,10 +128,10 @@ Trainer.updateTrainer = (id, data, result) => {
 
 // Delete Trainer
 Trainer.deleteTrainer = (id, result)=>{
-    dbConn.query("DELETE FROM capno_users WHERE id = ? and user_type =2", id, (err, res)=>{
+    dbConn.query("UPDATE capno_users SET deleted = 1 WHERE id = ? and user_type =2", id, (err, res)=>{
         if(err){
             console.log('Error while deleting the Trainer');
-            result(null, err);
+            result(err, null);
         }else{
             console.log("Trainer deleted successfully");
             result(null, res);

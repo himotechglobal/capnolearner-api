@@ -14,7 +14,8 @@ var ClientHomework = function(clientHw) {
 ClientHomework.getAllHomework = (data,result) => {
     dbConn.query('SELECT * FROM homework    where sessionid = ?  AND  status = 1    ',[md5(data.session_id)], (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
+
       } else {
         result(null, res)
       }
@@ -24,10 +25,10 @@ ClientHomework.getAllHomework = (data,result) => {
 
 // delete homework by id
 ClientHomework.deleteClientHomework = (id, result)=>{
-  dbConn.query("DELETE FROM homework WHERE id = ?", id, (err, res)=>{
+  dbConn.query("UPDATE  homework  SET deleted = 1  WHERE id = ?", id, (err, res)=>{
       if(err){
           console.log('Error while deleting the Client Homework');
-          result(null, err);
+          result(err ,null);
       }else{
           console.log("Client Homework deleted successfully");
           result(null, res);

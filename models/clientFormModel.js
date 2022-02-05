@@ -13,7 +13,7 @@ var ClientForms = function(cleintform) {
 ClientForms.getAllForms = (data,result) => {
     dbConn.query('SELECT * FROM client_form    where cl_id = ?  AND  status = 1    ',[md5(data.client_id)], (err, res) => {
       if (err) {
-        result(null, err)
+        result(err , null)
       } else {
         result(null, res)
       }
@@ -23,10 +23,10 @@ ClientForms.getAllForms = (data,result) => {
 
  
 ClientForms.deleteClientForm = (id, result)=>{
-  dbConn.query("DELETE FROM client_form WHERE id = ?", id, (err, res)=>{
+  dbConn.query("UPDATE client_form  SET deleted = 1 WHERE id = ?", id, (err, res)=>{
       if(err){
           console.log('Error while deleting the Client Form');
-          result(null, err);
+          result(err, null);
       }else{
           console.log("Client Form deleted successfully");
           result(null, res);

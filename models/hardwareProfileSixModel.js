@@ -20,7 +20,7 @@ var HardwareProfileSix = function(hardware) {
 HardwareProfileSix.getHardwareProfileListSix = (data,result) => {
   dbConn.query('SELECT * FROM owner_serial_six where owner_id = ? ', md5(data.owner) ,  (err, res) => {
     if (err) {
-      result(null, err)
+      result(err ,null);
     } else {
       result(null, res)
     }

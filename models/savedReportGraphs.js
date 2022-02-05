@@ -20,7 +20,7 @@ SavedReportGraphs.getAllGraph = (data,result) => {
    
         dbConn.query('SELECT * FROM client_session_report_graphs WHERE    rid = ?   order by `graph_order` asc', [data.report_id],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }

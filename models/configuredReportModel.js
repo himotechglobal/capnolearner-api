@@ -19,7 +19,7 @@ ConfiguredReport.getAllConfiguredReports = (data,result) => {
    
         dbConn.query('SELECT * FROM pre_configured_report WHERE   original = 0 AND  type = ?   order by `id` asc', [data.type],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }

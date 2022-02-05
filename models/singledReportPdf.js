@@ -16,7 +16,7 @@ SingleSessionPdf.getAllPdf = (data,result) => {
    
         dbConn.query('SELECT * FROM session_data_report_pdf WHERE   session_id = ?    order by `id` desc', [data.session_id],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }

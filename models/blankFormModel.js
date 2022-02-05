@@ -13,7 +13,8 @@ var BlankForms = function(blankform) {
 BlankForms.getAllForms = (data,result) => {
     dbConn.query('SELECT * FROM blank_forms where   status = 1 ',[data.type], (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
+
       } else {
         result(null, res)
       }

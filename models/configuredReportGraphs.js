@@ -19,7 +19,7 @@ ConfiguredReportGraph.getAllGraph = (data,result) => {
    
         dbConn.query('SELECT * FROM pre_configured_graphs WHERE    pid = ?   order by `graph_order` asc', [data.report_id],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }

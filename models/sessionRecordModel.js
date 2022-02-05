@@ -15,7 +15,7 @@ SessionRecord.getAllRecord = (data,result) => {
    
         dbConn.query('SELECT * FROM session_record WHERE session = ? order by `id` desc', [md5(data.session_id)],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }

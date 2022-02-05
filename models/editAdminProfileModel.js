@@ -22,7 +22,7 @@ var Owner = function(owner) {
 Owner.getAllOwner = (result) => {
     dbConn.query('SELECT * FROM capno_users WHERE user_type=1', (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }
@@ -34,7 +34,7 @@ Owner.getOwnerById = (data,result) => {
   // console.log(data.id);
   dbConn.query('SELECT * FROM capno_users WHERE id= ? and  user_type=1', [data.id], (err, res) => {
     if (err) {
-      result(null, err)
+      result(err ,null);
     } else {
       result(null, res)
     }
@@ -51,7 +51,7 @@ Owner.updateSubscriptionsDetails = (id, data, result) => {
       ], (err, res)=>{
       if(err){
           console.log(err);
-          result(null, err);
+          result(err ,null);;
       }else{
           console.log("Admin Subscription updated successfully");
           result(null, res);
@@ -81,7 +81,7 @@ Owner.ownerUpdate = (id, data, result) => {
         ], (err, res)=>{
         if(err){
             console.log(err);
-            result(null, err);
+            result(err ,null);;
         }else{
             console.log("Admin Profile updated successfully");
             result(null, res);

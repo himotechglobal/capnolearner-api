@@ -13,7 +13,7 @@ var TrainerForms = function(trainerFrom) {
 TrainerForms.getAllForms = (data,result) => {
     dbConn.query('SELECT * FROM practioner_form   where clientid = ? AND sessid = ?   AND  status = 1    ',[md5(data.client_id) , data.session_id ], (err, res) => {
       if (err) {
-        result(null, err)
+        result(err, null)
       } else {
         result(null, res)
       }
@@ -24,10 +24,10 @@ TrainerForms.getAllForms = (data,result) => {
 } 
 
 TrainerForms.deleteTrainerForm = (id, result)=>{
-  dbConn.query("DELETE FROM practioner_form WHERE id = ?", id, (err, res)=>{
+  dbConn.query("UPDATE practioner_form SET deleted = 1  WHERE id = ?", id, (err, res)=>{
       if(err){
           console.log('Error while deleting the Trainer Form');
-          result(null, err);
+          result(err , null);
       }else{
           console.log("Trainer Form deleted successfully");
           result(null, res);

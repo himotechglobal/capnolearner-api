@@ -18,7 +18,7 @@ SavedMultipleReport.getAllReport = (data,result) => {
    
         dbConn.query('SELECT * FROM multisession_data_report WHERE   clid = ?    order by `id` desc', [md5(data.client_id)],  (err, res) => {
             if (err) {
-              result(null, err)
+              result(err ,null);
             } else {
               result(null, res)
             }

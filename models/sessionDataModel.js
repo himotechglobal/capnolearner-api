@@ -17,7 +17,7 @@ var SessionData = function(session) {
 SessionData.getAllData = (data,result) => {
     dbConn.query('SELECT * FROM capno_data where sessionid = ? ',[md5(data.session_id)], (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }
@@ -28,7 +28,7 @@ SessionData.getAllDataByType = (data,result) => {
    if(data.type == 2){
     dbConn.query('SELECT * FROM capno_data WHERE   sessionid = ? AND  data_type = ?   order by `id`  desc LIMIT 0,1', [md5(data.session_id) ,data.type],  (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }
@@ -37,7 +37,7 @@ SessionData.getAllDataByType = (data,result) => {
    else{
     dbConn.query('SELECT * FROM capno_data WHERE   sessionid = ? AND  data_type = ?   order by `id`  desc', [md5(data.session_id) ,data.type],  (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }
@@ -51,7 +51,7 @@ SessionData.getAllDataByType = (data,result) => {
 SessionData.getSignalData = (data,result) => {
     dbConn.query('SELECT * FROM capno_data where signal_type = ? AND sessionid = ? AND data_type = 1',[data.signal_name,md5(data.session_id)], (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }

@@ -13,7 +13,7 @@ MultiReportSignals.getMultiReportSignalList = (data,result) => {
    
   dbConn.query('SELECT * FROM multi_report_sgnals  order by `id` asc',    (err, res) => {
       if (err) {
-        result(null, err)
+        result(err ,null);
       } else {
         result(null, res)
       }
