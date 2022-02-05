@@ -11,7 +11,7 @@ var TrainerForms = function(trainerFrom) {
 
 // get all blank forms 
 TrainerForms.getAllForms = (data,result) => {
-    dbConn.query('SELECT * FROM practioner_form   where clientid = ? AND sessid = ?   AND  status = 1    ',[md5(data.client_id) , data.session_id ], (err, res) => {
+    dbConn.query('SELECT * FROM practioner_form   where clientid = ? AND sessid = ?   AND  status = 1   and deleted = 0  ',[md5(data.client_id) , data.session_id ], (err, res) => {
       if (err) {
         result(err, null)
       } else {

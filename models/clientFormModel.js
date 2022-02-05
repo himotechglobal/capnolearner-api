@@ -11,7 +11,7 @@ var ClientForms = function(cleintform) {
 
 // get all blank forms 
 ClientForms.getAllForms = (data,result) => {
-    dbConn.query('SELECT * FROM client_form    where cl_id = ?  AND  status = 1    ',[md5(data.client_id)], (err, res) => {
+    dbConn.query('SELECT * FROM client_form    where cl_id = ?  AND  status = 1  and deleted = 0   ',[md5(data.client_id)], (err, res) => {
       if (err) {
         result(err , null)
       } else {

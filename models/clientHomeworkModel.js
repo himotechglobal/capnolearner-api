@@ -12,7 +12,7 @@ var ClientHomework = function(clientHw) {
 
 // get all homework by session
 ClientHomework.getAllHomework = (data,result) => {
-    dbConn.query('SELECT * FROM homework    where sessionid = ?  AND  status = 1    ',[md5(data.session_id)], (err, res) => {
+    dbConn.query('SELECT * FROM homework    where sessionid = ?  AND  status = 1   and deleted = 0  ',[md5(data.session_id)], (err, res) => {
       if (err) {
         result(err ,null);
 

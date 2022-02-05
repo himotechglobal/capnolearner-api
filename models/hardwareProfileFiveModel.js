@@ -16,7 +16,7 @@ var HardwareProfileFive = function(hardware) {
 
 // get all harwareprofile 
 HardwareProfileFive.getAllHardwareProfileFive = (data,result) => {
-    dbConn.query('SELECT * FROM owner_serial where owner_id = ? ', md5(data.owner) ,  (err, res) => {
+    dbConn.query('SELECT * FROM owner_serial where owner_id = ? and deleted = 0 ', md5(data.owner) ,  (err, res) => {
       if (err) {
         result(err ,null);
       } else {

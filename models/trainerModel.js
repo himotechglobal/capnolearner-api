@@ -39,7 +39,7 @@ var Trainer = function(trainer) {
 // get all trainer 
 Trainer.getAllTrainer = (data,result) => {
     if(data.status){
-        dbConn.query('SELECT * FROM capno_users WHERE   status = ? AND ((associated_owner = ? and user_type=2 ) OR ( id = ? and user_type=1  )) order by `firstname` asc', [data.status , md5(data.user_id),data.user_id],  (err, res) => {
+        dbConn.query('SELECT * FROM capno_users WHERE   status = ? and deleted = 0  AND ((associated_owner = ? and user_type=2 ) OR ( id = ? and user_type=1  )) order by `firstname` asc', [data.status , md5(data.user_id),data.user_id],  (err, res) => {
             if (err) {
               result(err ,null);
             } else {
@@ -48,7 +48,7 @@ Trainer.getAllTrainer = (data,result) => {
           })
     }
     else{
-        dbConn.query('SELECT * FROM capno_users WHERE   (associated_owner = ? and user_type=2 ) OR ( id = ? and user_type=1  ) order by `firstname` asc', [md5(data.user_id),data.user_id],  (err, res) => {
+        dbConn.query('SELECT * FROM capno_users WHERE   (associated_owner = ? and user_type=2 ) OR ( id = ? and user_type=1  ) and deleted = 0 order by `firstname` asc', [md5(data.user_id),data.user_id],  (err, res) => {
             if (err) {
               result(err ,null);
             } else {
