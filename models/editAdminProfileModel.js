@@ -32,7 +32,7 @@ Owner.getAllOwner = (result) => {
 // get owner by ID 
 Owner.getOwnerById = (data,result) => {
   // console.log(data.id);
-  dbConn.query('SELECT * FROM capno_users WHERE id= ? and  user_type=1', [data.id], (err, res) => {
+  dbConn.query('SELECT * FROM capno_users WHERE id= ?', [data.id], (err, res) => {
     if (err) {
       result(err ,null);
     } else {
