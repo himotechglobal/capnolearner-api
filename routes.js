@@ -10,7 +10,7 @@ const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,upda
 const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getAllDataByType,updateZoomLink } = require('./controllers/sessionController');
 const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf,getAllNotes } = require('./controllers/reportController');
 
-const { getOwnerProfile, updateOwner,updateSubscriptionsDetails } = require('./controllers/editAdminProfileController');
+const { getOwnerProfile,renewOwnerProfile, updateOwner,updateSubscriptionsDetails } = require('./controllers/editAdminProfileController');
 const { getRecordingList } = require('./controllers/getRecordingController');
 const { getHardwareProfileListFive, getHardwareProfileListSix , updateHardwareProfileFive ,registerHardwareProfileFive,deleteHardwareProfileFive} = require('./controllers/hardwareProfileController');
 
@@ -116,6 +116,7 @@ router.post('/device/five/delete/:id',auth, deleteHardwareProfileFive) // Delete
 router.get('/device/six/profile/:owner', getHardwareProfileListSix) // Get 6.0 Devices of users
 // router.get('/subscription/details/:user', getUserProfile) // Get 6.0 Devices of users
 router.get('/user/profile/:id', getOwnerProfile) //Get Owner Profile
+router.post('/complete/renewal/:id', renewOwnerProfile) //Get Owner Profile
 
  
 

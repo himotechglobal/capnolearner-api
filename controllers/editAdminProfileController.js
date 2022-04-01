@@ -13,6 +13,48 @@ exports.getOwnerProfile = (req, res) => {
     })
 }
 
+
+
+// update Admin Profile
+exports.renewOwnerProfile = (req, res)=>{
+    const data =  req.body;
+    console.log(data);
+    dbConn.query('INSERT INTO `capno_billing`(`user_id`, `details`) VALUES (?,?)', [req.body.id,req.body.details] , (err, result) => {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: 'DB error',
+                })
+            } else {
+                // console.log(result)
+               if(result.insertId ){
+                   let _renewTime = 86400*364 ; 
+                dbConn.query('update `capno_users` set `expire_account` = expire_account + ? where id = ?', [_renewTime,req.body.id] , (err, result) => {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: 'DB error',
+                        })
+                    } else { 
+                        res.status(200).json({
+                            success: true,
+                            message: 'Billing updated',
+                        })
+                    }
+                })
+               }
+               else{
+                res.status(400).json({
+                    success: false,
+                    message: 'Billing updated but not inserted',
+                })
+                 }
+}
+        })
+     
+}
+
+
 // update Admin Profile
 exports.updateOwner = (req, res)=>{
     const data =  req.body;
