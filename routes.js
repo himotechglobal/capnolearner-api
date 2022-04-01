@@ -113,7 +113,7 @@ router.post('/device/five/delete/:id',auth, deleteHardwareProfileFive) // Delete
 
 // Hardware Profile 6.0
 
-router.get('/device/six/profile/:owner',auth, getHardwareProfileListSix) // Get 6.0 Devices of users
+router.get('/device/six/profile/:owner', getHardwareProfileListSix) // Get 6.0 Devices of users
 
  
 
