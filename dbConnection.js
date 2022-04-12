@@ -12,4 +12,4 @@ const db_connection = mysql
     console.log("Failed to connect to Database - ", err);
   });
 
-module.exports = db_connection;
+module.exports = db_connection; 

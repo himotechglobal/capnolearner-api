@@ -10,7 +10,7 @@ const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,upda
 const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getAllDataByType,updateZoomLink } = require('./controllers/sessionController');
 const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf,getAllNotes } = require('./controllers/reportController');
 
-const { getOwnerProfile,renewOwnerProfile, updateOwner,updateSubscriptionsDetails } = require('./controllers/editAdminProfileController');
+const { getOwnerProfile,getEmailbyDomain,getEmailForSubscription,getExpiredAccount,saveEmailForSubscription,renewOwnerProfile, updateOwner,updateSubscriptionsDetails } = require('./controllers/editAdminProfileController');
 const { getRecordingList } = require('./controllers/getRecordingController');
 const { getHardwareProfileListFive, getHardwareProfileListSix , updateHardwareProfileFive ,registerHardwareProfileFive,deleteHardwareProfileFive} = require('./controllers/hardwareProfileController');
 
@@ -118,6 +118,11 @@ router.get('/device/six/profile/:owner', getHardwareProfileListSix) // Get 6.0 D
 router.get('/user/profile/:id', getOwnerProfile) //Get Owner Profile
 router.post('/complete/renewal/:id', renewOwnerProfile) //Get Owner Profile
 
+router.get('/emails/:domain',auth, getEmailbyDomain) //Get Email by domain
+router.post('/add/emails',auth, saveEmailForSubscription) //Get Email by domain
+router.get('/get/group/emails',auth, getEmailForSubscription) //Get Email by domain
+router.get('/get/expired/accounts', getExpiredAccount) //Get Email by domain
+
  
 
 // get country list
@@ -187,4 +192,4 @@ router.get('/states',auth, function(req, res) {
     
 // })
 
-module.exports = router;
+module.exports = router; 
