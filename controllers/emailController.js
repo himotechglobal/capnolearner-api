@@ -20,7 +20,7 @@ async function sendEmail(toAddress,subject,text,html) {
   
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: '"Professional School" <tech@bp.edu>', // sender address
+      from: '"CapnoLearning" <instruments@betterphysiology.com>', // sender address
       to: toAddress, // list of receivers
       subject: subject, // Subject line
       text: text, // plain text body

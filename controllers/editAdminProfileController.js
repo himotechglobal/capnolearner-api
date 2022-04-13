@@ -67,15 +67,18 @@ exports.getExpiredAccount = (req, res)=>{
                                     message: err
                                 })
                             } else {
+                                let _date = new Date(v.expire_account*1e3) ; 
+                                _date = _date.toLocaleDateString() ;
+                                
+
                                 if(result.length > 0 ){
-                                    let _body = 'Hi, <br /><br /> Capnotrainer subscription has expired for account connected to '+v.firstname + ' ' + v.lastname + '(' +v.email+'), please <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">click here</a> to renew.' ;
+                                    let _body = 'Dear Customer: <br /><br />The subaccount for '+v.firstname+' '+v.lastname+' with the user name '+v.email+' expires on '+_date+'.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">renew your subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
                                 await  sendEmail("yasirkhancse@gmail.com","Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
 
                                 //   sendEmail(result[0].primaryEmail,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
                                 }
                                 else{
-                                    let _body = 'Hi '+v.firstname + ' ' + v.lastname + ', <br /><br /> Your Capnotrainer subscription has expired for account connected to (' +v.email+'), please <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">click here</a> to renew.'
-                                //   sendEmail(v.email,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
+                                    let _body = 'Dear Customer: <br /><br />Your CapnoLearning software subscription will be expiring on '+_date+'.<br /><br />The user name we have on record is '+v.email+'.<br /><br />The annual subscription fee for the first instrument is $175.00 and $60.00 for each additional instrument.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">renew your subscription.</a><br /><br />If you are the administrator of an ORGANIZATIONAL SUBSCRIPTION ACCOUNT, click on the above link to renew the primary subscription for $175.00.  You will be sent separate PayPal payment requests for subaccount subscriptions 30 days before their due date.<br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
                                 await  sendEmail("yasirkhancse@gmail.com","Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
 
                                 }
@@ -99,7 +102,7 @@ exports.getEmailForSubscription = (req, res)=>{
     console.log(req.body);
      
 
-    var sql = "select * from subscriptionEmails";
+    var sql = "select s.* , c.business from subscriptionEmails as s LEFT JOIN capno_users as c on c.email = s.primaryEmail ";
         dbConn.query(sql, (err, result) => {
             if (err) {
                 res.status(200).json({
@@ -119,7 +122,7 @@ exports.saveEmailForSubscription = (req, res)=>{
     console.log(req.body);
      
 
-    var sql = "INSERT INTO subscriptionEmails (email, price, primaryEmail) VALUES ?";
+    var sql = "INSERT INTO subscriptionEmails (email, price, primaryEmail, type) VALUES (?)";
         dbConn.query(sql, [req.body], (err, result) => {
             if (err) {
                 res.status(200).json({
@@ -234,7 +237,7 @@ exports.getOwnerProfile = (req, res) => {
     })
 }
 
-
+ 
 // get all Admin list
 exports.updateSubscriptionsDetails = (req, res) => {
     Owner.updateSubscriptionsDetails(req.params.id , req.body, (err, owner) => {
@@ -251,3 +254,4 @@ exports.updateSubscriptionsDetails = (req, res) => {
     })
 }
 
+ 
