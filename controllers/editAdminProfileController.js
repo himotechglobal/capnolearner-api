@@ -92,7 +92,7 @@ exports.getExpiredAccount = (req, res)=>{
     let now = new Date().getTime() / 1e3 ; 
     let _daysLater = now + 86400*4; 
 
-    var sql = "select * from capno_users where (expire_account < ? or (expire_account < ? and expire_account > ?)) and payReminder = 0 limit 0, 10";
+    var sql = "select * from capno_users where (expire_account < ? or (expire_account < ? and expire_account > ?)) and payReminder = 0 limit 0, 5";
         dbConn.query(sql,[now,_daysLater,now], (err, result) => {
             if (err) {
                 res.status(200).json({
