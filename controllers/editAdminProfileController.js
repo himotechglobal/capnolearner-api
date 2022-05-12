@@ -42,6 +42,47 @@ exports.getEmailbyDomain = (req, res)=>{
 }
 
 
+exports.getGroupPrice = (req, res)=>{
+
+    // console.log(req.body);
+     
+    let now = new Date().getTime() / 1e3 ; 
+
+    var sql = "select * from capno_users where id = ?";
+        dbConn.query(sql,[req.params.id], (err, result) => {
+            if (err) {
+                res.status(200).json({
+                    success: false,
+                    message: err
+                })
+            } else {
+              
+                    let domain =  result[0].email.split('@') ;
+                    console.log(domain);
+                      dbConn.query("select * from subscriptionEmails where email = ? or (primaryEmail  LIKE ? and type = 1 and email = 'all') ",[result[0].email,'%'+domain[1]+'%'], async (err, resultPrice) => {
+                            if (err) {
+                                res.status(200).json({
+                                    success: false,
+                                    message: err
+                                })
+                            } else {
+                                if(resultPrice.length > 0){
+                                    res.status(200).json({
+                                        success: true,
+                                        price: resultPrice[0].price,
+                                        data: resultPrice
+                                    })
+                                }
+                                else{
+                                    res.status(200).json({
+                                        success: false
+                                    })
+                                }
+                            }
+                        })
+            }
+})
+}
 
 
 exports.getExpiredAccount = (req, res)=>{
@@ -49,9 +90,10 @@ exports.getExpiredAccount = (req, res)=>{
     // console.log(req.body);
      
     let now = new Date().getTime() / 1e3 ; 
+    let _daysLater = now + 86400*4; 
 
-    var sql = "select * from capno_users where expire_account < ?";
-        dbConn.query(sql,[now], (err, result) => {
+    var sql = "select * from capno_users where (expire_account < ? or (expire_account < ? and expire_account > ?)) and payReminder = 0 limit 0, 10";
+        dbConn.query(sql,[now,_daysLater,now], (err, result) => {
             if (err) {
                 res.status(200).json({
                     success: false,
@@ -60,34 +102,47 @@ exports.getExpiredAccount = (req, res)=>{
             } else {
                 if(result.length > 0 ){
                     result.map((v,i) => {
-                        dbConn.query("select * from subscriptionEmails where email = ?",[v.email], async (err, result) => {
+                    let domain =  v.email.split('@') ;
+                      dbConn.query("select * from subscriptionEmails where email = ? or (primaryEmail  LIKE ? and type = 1 and email = 'all') ",[v.email,'%'+domain[1]+'%'], async (err, result) => {
                             if (err) {
                                 res.status(200).json({
                                     success: false,
                                     message: err
                                 })
                             } else {
+
+
+                                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                                 let _date = new Date(v.expire_account*1e3) ; 
-                                _date = _date.toLocaleDateString() ;
-                                
-
+                                let _month = _date.getMonth() ;
+                                let _day  = _date.getDay() ; 
+                                let _year = _date.getFullYear() ; 
+                                 _date = _day + " " + monthNames[_month] + " " + _year ; 
+                                let _lang = 'has expired' ;
+                                let _lang2 = 'has expired' ;
+                                if(v.expire_account > now){
+                                    _lang = 'expires' ; 
+                                    _lang2 = 'will be expiring'
+                                }
                                 if(result.length > 0 ){
-                                    let _body = 'Dear Customer: <br /><br />The subaccount for '+v.firstname+' '+v.lastname+' with the user name '+v.email+' expires on '+_date+'.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">renew your subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
-                                await  sendEmail("yasirkhancse@gmail.com","Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
-
+                                    let _body = 'Dear Customer: <br /><br />Your Betterphysiology software subscription subaccount for '+v.firstname+' '+v.lastname+' with the username '+v.email+' '+_lang+' on '+_date+'.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/group/'+v.id+'">renew the subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
+                                await  sendEmail(result[0].primaryEmail,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
+                                dbConn.query("update capno_users set payReminder = 1 where email = ?",[v.email]) ; 
                                 //   sendEmail(result[0].primaryEmail,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
                                 }
                                 else{
-                                    let _body = 'Dear Customer: <br /><br />Your CapnoLearning software subscription will be expiring on '+_date+'.<br /><br />The user name we have on record is '+v.email+'.<br /><br />The annual subscription fee for the first instrument is $175.00 and $60.00 for each additional instrument.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">renew your subscription.</a><br /><br />If you are the administrator of an ORGANIZATIONAL SUBSCRIPTION ACCOUNT, click on the above link to renew the primary subscription for $175.00.  You will be sent separate PayPal payment requests for subaccount subscriptions 30 days before their due date.<br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
-                                await  sendEmail("yasirkhancse@gmail.com","Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
-
-                                }
+                                    // let _body = 'Dear Customer: <br /><br />Your Betterphysiology software subscription subaccount for '+v.firstname+' '+v.lastname+' with the username '+v.email+' expires on '+_date+'.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">renew the subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
+  
+                                    let _body = 'Dear Customer: <br /><br />Your CapnoLearning software subscription '+_lang2+' on '+_date+'.<br /><br />The user name we have on record is '+v.email+'.<br /><br />The annual subscription fee for the first instrument is $175.00 and $60.00 for each additional instrument.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">renew your subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
+                                await  sendEmail(v.email,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
+                                dbConn.query("update capno_users set payReminder = 1 where email = ?",[v.email]) ; 
+                                }  
 
 
                             }
-                        })
+                        }) 
                     })
-                }
+                } 
                 res.status(200).json({
                     success: true,
                     count: result.length,
@@ -117,6 +172,32 @@ exports.getEmailForSubscription = (req, res)=>{
             }
         })
 }
+
+ 
+
+
+exports.getEmailListForSubscription = (req, res)=>{
+
+    console.log(req.body);
+     
+
+    var sql = "select * from capno_users where email LIKE '%"+req.params.domain+"%' and email NOT LIKE '%(Self)%'";
+        dbConn.query(sql, (err, result) => {
+            if (err) {
+                res.status(200).json({
+                    success: false,
+                    message: err
+                })
+            } else {
+                res.status(200).json({
+                    success: true,
+                    data: result
+                })
+            }
+        })
+}
+
+
 exports.saveEmailForSubscription = (req, res)=>{
 
     console.log(req.body);
