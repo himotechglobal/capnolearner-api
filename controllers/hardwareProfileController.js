@@ -20,10 +20,18 @@ exports.getHardwareProfileListSix = (req, res) => {
     HardwareProfileSix.getHardwareProfileListSix(req.params , (err, hardwareprofiles) => {
         if(err)
         throw new Error(err)
-        return res.status(200).json({ 
-            success: true,
-            hardwareprofiles
+        HardwareProfileFive.getAllHardwareProfileFive(req.params , (err, _hardwareprofiles) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                success: true,
+                hardwareprofiles: hardwareprofiles.concat(_hardwareprofiles)
+            })
         })
+        // return res.status(200).json({ 
+        //     success: true,
+        //     hardwareprofiles
+        // })
     })
 }
 
