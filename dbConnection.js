@@ -3,6 +3,11 @@ require('dotenv').config()
 
 const db_connection = mysql 
   .createConnection({
+
+    // host     : 'localhost',
+    // user     : 'root', 
+    // password : '',
+    // database : 'capno'
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     database: process.env.DB_NAME,

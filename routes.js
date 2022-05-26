@@ -17,7 +17,15 @@ const { getHardwareProfileListFive, getHardwareProfileListSix , updateHardwarePr
 const { getUser } = require('./controllers/getUserController');
 // const { getAllForms } = require('./models/blankFormModel');
 const { getAllForm, getClientForm, uploadClientForm, deleteClientForm,deleteTrainerForm, uploadClientHomework,uploadTrainerForm,getTrainerForm,getClientHomework,deleteClientHomework } = require('./controllers/formController');
-  
+const {subscriberUserList,getExpireDate7days,getExpireDate30days} = require('./controllers/subscribeuserControlller')
+
+
+// subscriber user list api
+router.get('/subscriber/user/list',subscriberUserList); // subscriber user list
+router.get('/exprie/next/sevendays',getExpireDate7days); // 7 days expridate api user list
+router.get('/exprie/next/thirtydays',getExpireDate30days); // 30 days expridate api user list
+
+
 
 // Login
 router.post('/login',[
