@@ -80,7 +80,7 @@ exports.createNewGroup = (req, res) => {
             }
             else {
                 success = false
-           let arrayData = [] ;    
+           let arrayData = [] ;
         data.devices.map((v,i) => {
             arrayData.push([md5(result.insertId.toString()),v.name,v.serialnumber]);
         })
