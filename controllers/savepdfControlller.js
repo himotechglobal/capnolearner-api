@@ -105,7 +105,7 @@ exports.getNotepdf = (req, resp) => {
             console.log(result[0].session_id)
             if (result[0].session_id) {
                
-                dbConn.query('SELECT * FROM client_session_report WHERE id = ?', [result[0].session_id], (err, resultCid)=>{
+                dbConn.query('SELECT * FROM client_session WHERE id = ?', [result[0].session_id], (err, resultCid)=>{
                     if (err) {
                         resp.status(500).json({
                             success: false,
