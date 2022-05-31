@@ -4,6 +4,7 @@ const md5 = require('md5');
 const { body } = require('express-validator');
 const { login } = require('./controllers/loginController');
 const auth = require("./middleware/auth")
+const {getpdf} = require('./controllers/savepdfControlller');
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,updateGroupProfile, deleteGroup } = require('./controllers/groupController');
@@ -24,6 +25,8 @@ const {subscriberUserList,getExpireDate7days,getExpireDate30days} = require('./c
 router.get('/subscriber/user/list',subscriberUserList); // subscriber user list
 router.get('/exprie/next/sevendays',getExpireDate7days); // 7 days expridate api user list
 router.get('/exprie/next/thirtydays',getExpireDate30days); // 30 days expridate api user list
+router.get('/pdf/list/:id',getpdf);
+
 
 
 
