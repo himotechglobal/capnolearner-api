@@ -89,3 +89,66 @@ console.log(req.params.id)
 
     })
 }
+
+
+exports.getNotepdf = (req, resp) => {
+ 
+
+    console.log(req.params.id)
+        dbConn.query('SELECT * FROM client_session_report WHERE id = ?', [req.params.id], (err, result) => {
+            if (err) {
+                resp.status(500).json({
+                    success: false,
+                    message: 'Somothing went wrong'
+                })
+            }
+            console.log(result[0].session_id)
+            if (result[0].session_id) {
+               
+                dbConn.query('SELECT * FROM client_session_report WHERE id = ?', [result[0].session_id], (err, resultCid)=>{
+                    if (err) {
+                        resp.status(500).json({
+                            success: false,
+                            message: 'Somothing went wrong'
+                        })
+                    }
+                    console.log(resultCid[0].cid)
+                    if(resultCid[0].cid){
+                        dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [resultCid[0].cid], (err, getclientResult)=>{
+                            if (err) {
+                                resp.status(500).json({
+                                    success: false,
+                                    message: 'Somothing went wrong'
+                                })
+                            }
+                            if(getclientResult[0].associated_owner){
+                                dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [getclientResult[0].associated_owner], (err, finalResult)=>{
+    
+                                    if (err) {
+                                        resp.status(500).json({
+                                            success: false,
+                                            message: 'Somothing went wrong'
+                                        })
+                                    }
+                                    if(finalResult.length > 0){
+                                        resp.status(200).json({
+                                            success: true,
+                                            data: finalResult,
+                                            result: result[0].notes,
+                                            firstname: getclientResult[0].firstname,
+                                            lastname: getclientResult[0].lastname,
+                                            
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }
+                  
+    
+                })
+            }
+    
+    
+        })
+    }
