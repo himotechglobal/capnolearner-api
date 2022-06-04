@@ -58,8 +58,8 @@ console.log(req.params.id)
                                 message: 'Somothing went wrong'
                             })
                         }
-                        if(getclientResult[0].associated_owner){
-                            dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [getclientResult[0].associated_owner], (err, finalResult)=>{
+                        if(getclientResult[0].associated_practioner){
+                            dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [getclientResult[0].associated_practioner], (err, finalResult)=>{
 
                                 if (err) {
                                     resp.status(500).json({
@@ -72,6 +72,8 @@ console.log(req.params.id)
                                         success: true,
                                         data: finalResult,
                                         result: result[0].data,
+                                        pdfname: result[0].pdf_name,
+                                        sessionDate: resultCid[0].name,
                                         firstname: getclientResult[0].firstname,
                                         lastname: getclientResult[0].lastname,
                                         
@@ -121,8 +123,8 @@ exports.getNotepdf = (req, resp) => {
                                     message: 'Somothing went wrong'
                                 })
                             }
-                            if(getclientResult[0].associated_owner){
-                                dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [getclientResult[0].associated_owner], (err, finalResult)=>{
+                            if(getclientResult[0].associated_practioner){
+                                dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [getclientResult[0].associated_practioner], (err, finalResult)=>{
     
                                     if (err) {
                                         resp.status(500).json({
@@ -135,6 +137,7 @@ exports.getNotepdf = (req, resp) => {
                                             success: true,
                                             data: finalResult,
                                             result: result[0].notes,
+                                            sessionDate: resultCid[0].name,
                                             firstname: getclientResult[0].firstname,
                                             lastname: getclientResult[0].lastname,
                                             
