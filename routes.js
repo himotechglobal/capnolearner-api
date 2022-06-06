@@ -4,7 +4,7 @@ const md5 = require('md5');
 const { body } = require('express-validator');
 const { login } = require('./controllers/loginController');
 const auth = require("./middleware/auth")
-const {getpdf,getNotepdf,livesessionImage} = require('./controllers/savepdfControlller');
+const {getpdf,getNotepdf,livesessionImage,livesessionNotes} = require('./controllers/savepdfControlller');
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,updateGroupProfile, deleteGroup } = require('./controllers/groupController');
@@ -29,6 +29,7 @@ router.get('/pdf/list/:id',getpdf);
 router.get('/get/pdfnotes/list/:id',getNotepdf);
 // router.get('/get/pdfnotes/list/:id',getNotepdf);
 router.get('/get/live/sessionimage/:sessionid/:data_type',livesessionImage);
+router.get('/get/live/session/notes/:sessionid/:data_type',livesessionNotes);
 
 
 
