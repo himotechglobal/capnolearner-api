@@ -155,3 +155,66 @@ exports.getNotepdf = (req, resp) => {
     
         })
     }
+
+
+   
+
+
+    exports.livesessionImage = (req, resp) => {
+        console.log(req.params.sessionid)
+            dbConn.query('SELECT * FROM capno_data WHERE sessionid = md5(?) and data_type = ?', [req.params.sessionid, req.params.data_type], (err, result)=>{
+                if (err) {
+                    resp.status(500).json({
+                        success: false,
+                        message: 'Somothing went wrong'
+                    })
+                }
+                console.log(result[0].sessionid)
+                if(result[0].sessionid){
+                    dbConn.query('SELECT * FROM client_session WHERE md5(id) = ?', [result[0].sessionid], (err, resultCid)=>{
+                        if (err) {
+                            resp.status(500).json({
+                                success: false,
+                                message: 'Somothing went wrong'
+                            })
+                        }
+                        console.log(resultCid[0].cid)
+                        if(resultCid[0].cid){
+                            dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [resultCid[0].cid], (err, getclientResult)=>{
+                                if (err) {
+                                    resp.status(500).json({
+                                        success: false,
+                                        message: 'Somothing went wrong'
+                                    })
+                                }
+                                if(getclientResult[0].associated_practioner){
+                                    dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [getclientResult[0].associated_practioner], (err, finalResult)=>{
+        
+                                        if (err) {
+                                            resp.status(500).json({
+                                                success: false,
+                                                message: 'Somothing went wrong'
+                                            })
+                                        }
+                                        if(finalResult.length > 0){
+                                            resp.status(200).json({
+                                                success: true,
+                                                data: finalResult,
+                                                result: result[0].sessiondata,
+                                                sessionDate: resultCid[0].name,
+                                                firstname: getclientResult[0].firstname,
+                                                lastname: getclientResult[0].lastname,
+                                                
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                      
+        
+                    })
+                }
+            })
+        }
+
