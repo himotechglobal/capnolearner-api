@@ -1,10 +1,28 @@
+const express = require('express');
 const router = require('express').Router();
 const dbConn = require('./dbConnection')
 const md5 = require('md5');
 const { body } = require('express-validator');
 const { login } = require('./controllers/loginController');
+const multer  = require('multer');
+
 const auth = require("./middleware/auth")
-const {getpdf,getNotepdf,livesessionImage,livesessionNotes,getScreenshort} = require('./controllers/savepdfControlller');
+const app = express(); 
+
+app.use('profile', express.static('profile'))
+
+const profileStorage = multer.diskStorage({
+    destination: 'profile',
+    filename:(req,file, cb) =>{
+        return cb(null, `${file.fieldname}_${Date.now()}${paths.extname(file.originalname)}`)
+    }
+})
+
+const profileupload = multer({
+    storage: profileStorage,
+    limits: {fileSize: 2000000},
+})
+const {getpdf,getNotepdf,livesessionImage,livesessionNotes,getScreenshort,savescreenshort} = require('./controllers/savepdfControlller');
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,updateGroupProfile, deleteGroup } = require('./controllers/groupController');
@@ -18,7 +36,7 @@ const { getHardwareProfileListFive, getHardwareProfileListSix , updateHardwarePr
 const { getUser } = require('./controllers/getUserController');
 // const { getAllForms } = require('./models/blankFormModel');
 const { getAllForm, getClientForm, uploadClientForm, deleteClientForm,deleteTrainerForm, uploadClientHomework,uploadTrainerForm,getTrainerForm,getClientHomework,deleteClientHomework } = require('./controllers/formController');
-const {subscriberUserList,getExpireDate7days,getExpireDate30days} = require('./controllers/subscribeuserControlller')
+const {subscriberUserList,getExpireDate7days,getExpireDate30days,updateExpirydate} = require('./controllers/subscribeuserControlller')
 
 
 // subscriber user list api
@@ -30,7 +48,9 @@ router.get('/get/pdfnotes/list/:id',getNotepdf);
 // router.get('/get/pdfnotes/list/:id',getNotepdf);
 router.get('/get/live/sessionimage/:sessionid/:data_type',livesessionImage);
 router.get('/get/live/session/notes/:sessionid/:data_type',livesessionNotes);
+router.post('/save/screenshort',profileupload.single('data'),savescreenshort);
 router.get('/get/screenshort/:id',getScreenshort);
+router.post('/update/expiry/date/:id',updateExpirydate);
 
 
 

@@ -324,3 +324,36 @@ exports.getScreenshort = (req, resp) => {
     })
 }
 
+
+// savescreenshort
+exports.savescreenshort = (req, resp) => {
+    let dataAray = {
+        data: req.body.data,
+        session_id: req.body.session_id,
+        pdf_name: req.body.pdf_name,
+        type: req.body.type,
+        status: req.body.status,
+       
+    }
+    console.log(dataAray)
+    dbConn.query("INSERT INTO session_data_report_pdf SET? ",dataAray, (error, result) => {
+        if(error){
+            resp.status(500).json({
+                success: false,
+                message: 'Somothing went wrong'
+            })
+        }
+        else{
+           
+            resp.status(200).json({
+                success: true,
+                message: 'screenshort Inserted Successfully',
+              
+               
+            })
+        }
+
+
+})
+    
+}
