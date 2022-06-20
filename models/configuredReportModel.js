@@ -29,5 +29,34 @@ ConfiguredReport.getAllConfiguredReports = (data,result) => {
 } 
   
 
+// get all Config 
+ConfiguredReport.getAlternateReport = (data,result) => {
+   
+  dbConn.query('SELECT * FROM pre_configured_report WHERE   original = ? AND byuser = md5(?)  AND  type = ?   order by `id` asc', [data.original,data.user,data.type],  (err, res) => {
+      if (err) {
+        result(err ,null);
+      } else {
+        result(null, res)
+      }
+    })
+
+
+} 
+
+
+ConfiguredReport.saveAlternateReport = (data,result) => {
+   
+  dbConn.query('insert into  pre_configured_report  (name, original , byuser, type ) values (?,?,md5(?),?) ' , [data.name,data.original,data.user,data.type],  (err, res) => {
+      if (err) {
+        result(err ,null);
+      } else {
+        result(null, res)
+      }
+    })
+
+
+} 
+
+
 
 module.exports = ConfiguredReport

@@ -8,21 +8,103 @@ const SavedMultipleReport = require('../models/savedMultipleReport')
 const MultiReportPdf = require('../models/multiReportPdf')
 
 
+ 
+
+
+exports.updateGroupGraph = (req,res) => {
+    SavedSingleReport.updateGroupGraph(req.body,(err, reports) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            reports
+        })
+    })
+}
+
+
+exports.updateSingleGraph = (req,res) => {
+    SavedSingleReport.updateGraph(req.body,(err, reports) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            reports
+        })
+    })
+}
+
+
+
+
+exports.saveGroupGraph = (req,res) => {
+    SavedSingleReport.saveGroupGraph(req.body,(err, reports) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            reports
+        })
+    })
+}
+
+exports.saveSingleGraph = (req,res) => {
+    SavedSingleReport.saveGraph(req.body,(err, reports) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            reports
+        })
+    })
+}
 // get all Session list
 exports.getConfigList = (req, res) => {
  
     ConfiguredReport.getAllConfiguredReports(req.query,(err, sessions) => {
+            if(err) 
+            throw new Error(err) 
+            return res.status(200).json({ 
+                status: true,
+                sessions 
+            })  
+        })
+     
+   
+}
+
+
+
+
+
+exports.viewReportDetails= (req, res) => {
+ 
+    SavedSingleReport.getReportDetail(req.query,(err, details) => {
             if(err)
             throw new Error(err)
             return res.status(200).json({ 
                 status: true,
-                sessions
+                details
             })
         })
     
    
 }
 
+
+exports.viewReportConfig= (req, res) => {
+ 
+    ConfiguredReportGraphs.getAllReportGraph(req.query,(err, graphs) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                graphs
+            })
+        })
+    
+   
+}
 
 exports.getReportConfig = (req, res) => {
  
@@ -60,7 +142,7 @@ exports.getAllNotes = (req, res) => {
             return res.status(200).json({ 
                 status: true,
                 notes
-            })
+            }) 
         })
     
     
@@ -79,12 +161,111 @@ exports.getSingleReport = (req, res) => {
     
     
 }
+
+
+
+exports.updateSingleReport = (req, res) => {
+    // console.log(req.body);
+ 
+    SavedSingleReport.updateReport(req.body,(err, reports) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                reports
+            })
+        })
+    
+   
+}
+
+
+
+exports.saveMultiReport = (req, res) => {
+    // console.log(req.body);
+ 
+    SavedSingleReport.saveReport(req.body,(err, reports) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                reports
+            })
+        })
+    
+   
+}
+
+exports.saveSingleReport = (req, res) => {
+    // console.log(req.body);
+ 
+    SavedSingleReport.saveReport(req.body,(err, reports) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                reports
+            })
+        })
+    
+   
+}
+
+
+exports.getAlternateSingleReport = (req, res) => {
+ 
+    ConfiguredReport.getAlternateReport(req.params,(err, reports) => {
+            if(err)
+            throw new Error(err)
+            return res.status(200).json({ 
+                status: true,
+                reports
+            })
+        })
+    
+   
+}
+
+exports.saveAlternateSingleReport = (req, res) => {
+    // console.log("data",req.body)
+
+    ConfiguredReport.saveAlternateReport(req.body,(err, reports) => {
+            if(err)
+            throw new Error(err) 
+            return res.status(200).json({ 
+                status: true,
+                reports
+            }) 
+        })
+    
+   
+}
+
+
+exports.saveAlternateSingleGraph = (req, res) => {
+    console.log(req.body);
+
+    ConfiguredReportGraphs.saveAlternateGraph(req.body,(err, reports) => {
+            if(err)
+            throw new Error(err) 
+            return res.status(200).json({ 
+                status: true,
+                reports
+            }) 
+        })
+    
+   
+}
+
+
+
+
 exports.getMultileReport = (req, res) => {
  
     SavedMultipleReport.getAllReport(req.query,(err, reports) => {
             if(err)
             throw new Error(err)
-            return res.status(200).json({ 
+            return res.status(200).json({  
                 status: true,
                 reports
             })

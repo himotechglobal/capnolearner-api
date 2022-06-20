@@ -6,7 +6,7 @@ const db_connection = mysql
 
     // host     : 'localhost',
     // user     : 'root', 
-    // password : '',
+    // password : '', 
     // database : 'capno'
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

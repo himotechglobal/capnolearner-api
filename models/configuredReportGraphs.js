@@ -14,6 +14,20 @@ var ConfiguredReportGraph = function(report) {
 
  
 
+
+
+// get all Config 
+ConfiguredReportGraph.getAllReportGraph = (data,result) => {
+ 
+      dbConn.query('SELECT * FROM client_session_report_graphs WHERE    rid = ?   order by `graph_order` asc', [data.report_id],  (err, res) => {
+        if (err) {
+          result(err ,null);
+        } else {
+          result(null, res)
+        }
+      })
+     }
+   
 // get all Config 
 ConfiguredReportGraph.getAllGraph = (data,result) => {
    
@@ -30,4 +44,29 @@ ConfiguredReportGraph.getAllGraph = (data,result) => {
   
 
 
+ConfiguredReportGraph.saveAlternateGraph = (_data,result) => {
+  let data = _data._config ; 
+
+  let _other = {
+            xrange: data.xrange, 
+            units: data.units,
+            annotation: data.annotation,
+            grid: data.grid,
+            inverty: data.inverty,
+            yposition: data.yposition,
+            lineType: data.lineType
+  }
+  _other = JSON.stringify(_other);
+ dbConn.query('INSERT INTO `pre_configured_graphs` (`signal_name`,`color`,`type`, `avg`, `thick`, `xmin`, `xmax`, `ymin`, `ymax`, `pid`, `graph_order`, `row`, `col` , `other_config` ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) ' , [_data.signal_name,data.color,data.type,data.avg, data.thick,data.xmin,data.xmax,data.ymin,data.ymax,_data.alternateId,data.graph_order,data.row,data.col,_other],  (err, res) => {
+     if (err) {
+       result(err ,null);
+     } else { 
+       result(null, res)   
+     }  
+   }) 
+ 
+  
+} 
+
+   
 module.exports = ConfiguredReportGraph

@@ -22,12 +22,12 @@ const profileupload = multer({
     storage: profileStorage,
     limits: {fileSize: 2000000},
 })
-const {getpdf,getNotepdf,livesessionImage,livesessionNotes,getScreenshort,savescreenshort} = require('./controllers/savepdfControlller');
+const {getpdf,getNotepdf,livesessionImage,livesessionNotes,getScreenshot,getPrevScreenshot,savescreenshort} = require('./controllers/savepdfControlller');
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,updateGroupProfile, deleteGroup } = require('./controllers/groupController');
 const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getAllDataByType,updateZoomLink } = require('./controllers/sessionController');
-const { getConfigList,getMultiReportSignalList,getReportConfig,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf,getAllNotes } = require('./controllers/reportController');
+const { getConfigList,getMultiReportSignalList,getReportConfig,viewReportConfig,viewReportDetails,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf,getAllNotes, saveAlternateSingleReport,getAlternateSingleReport,saveAlternateSingleGraph , saveSingleReport , saveMultiReport ,  saveSingleGraph , saveGroupGraph,updateSingleReport,updateSingleGraph,updateGroupGraph } = require('./controllers/reportController');
 
 const { getOwnerProfile,getEmailbyDomain,getEmailForSubscription,getEmailListForSubscription,getExpiredAccount,getGroupPrice,saveEmailForSubscription,renewOwnerProfile, updateOwner,updateSubscriptionsDetails } = require('./controllers/editAdminProfileController');
 const { getRecordingList } = require('./controllers/getRecordingController');
@@ -37,7 +37,7 @@ const { getUser } = require('./controllers/getUserController');
 // const { getAllForms } = require('./models/blankFormModel');
 const { getAllForm, getClientForm, uploadClientForm, deleteClientForm,deleteTrainerForm, uploadClientHomework,uploadTrainerForm,getTrainerForm,getClientHomework,deleteClientHomework } = require('./controllers/formController');
 const {subscriberUserList,getExpireDate7days,getExpireDate30days,updateExpirydate} = require('./controllers/subscribeuserControlller')
-
+const {getCompleteforms,getNmaes,getassemblyliveNotes,getassemblyliveimages,assemblypdfreports,getclientformName,getpractionerformname,saveAssemblyreport,getassemblySetionReport,getassemblyReportsesseionNotes} = require('./controllers/assemblyController')
 
 // subscriber user list api
 router.get('/subscriber/user/list',subscriberUserList); // subscriber user list
@@ -48,13 +48,24 @@ router.get('/get/pdfnotes/list/:id',getNotepdf);
 // router.get('/get/pdfnotes/list/:id',getNotepdf);
 router.get('/get/live/sessionimage/:sessionid/:data_type',livesessionImage);
 router.get('/get/live/session/notes/:sessionid/:data_type',livesessionNotes);
-router.post('/save/screenshort',profileupload.single('data'),savescreenshort);
-router.get('/get/screenshort/:id',getScreenshort);
+router.post('/save/screenshot',profileupload.single('data'),savescreenshort);
+router.get('/get/screenshot/:id',getScreenshot);
 router.post('/update/expiry/date/:id',updateExpirydate);
 
+router.get('/get/previous/screenshot/:id/:cid',getPrevScreenshot);
+router.get('/assembly/session/report/:session_id',assemblypdfreports);
 
-
-
+router.post('/save/assembly/report',saveAssemblyreport);
+router.get('/get/assembly/report/:id',getassemblySetionReport);
+router.get('/get/assembly/Sessionnotes/:id',getassemblyReportsesseionNotes);
+router.get('/get/assembly/liveimages/:id',getassemblyliveimages);
+router.get('/get/livenotes/:id',getassemblyliveNotes);
+          
+router.get('/get/client/formname/:cl_id',getclientformName);
+router.get('/get/practioner/formname/:clientid',getpractionerformname);
+ 
+router.get('/get/names/:id',getNmaes); 
+router.get('/get/assembly/complete/form/:id/:cl_id',getCompleteforms);
 // Login
 router.post('/login',[
     body('email',"Invalid email address")
@@ -111,6 +122,9 @@ router.post('/forms/trainer/upload',auth, uploadTrainerForm) // upload trainer f
 router.get('/configured/report',auth, getConfigList) // get pre-config reports list 
 router.get('/configured/signals',auth, getMultiReportSignalList) // get multi report signals list 
 router.get('/report/config',auth, getReportConfig) // get pre-config report config
+router.get('/view/report/config',auth, viewReportConfig) // get pre-config report config
+router.get('/view/report/details',auth, viewReportDetails) // get pre-config report config
+
 router.get('/report/saved/config',auth, getSavedReportConfig) // get saved report config
 router.get('/report/single',auth, getSingleReport) // get single-session report
 router.get('/report/single/pdf',auth, getSingleReportPdf) // get single-session report pdf
@@ -119,16 +133,38 @@ router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get multi-sessio
 // router.get('/report/multiple',auth, getMultileReport) // get pre-config report config
 // router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
 router.get('/report/notes', auth, getAllNotes) // get  report notes
+ 
+router.post('/create/multi/session', saveMultiReport) // get  report notes
+// router.post('/save/single/report/graph', saveSingleGraph) // get  report notes
 
 
 
-// Group
+router.get('/get/single/alertnate/report/config/:original/:user/:type', auth, getAlternateSingleReport) // get  report notes
+router.post('/save/single/alertnate/report/config', saveAlternateSingleReport) // get  report notes
+router.post('/save/single/alertnate/report/graph', saveAlternateSingleGraph) // get  report notes
+
+
+// router.get('/get/single/alertnate/report/config/:original/:user/:type', auth, getAlternateSingleReport) // get  report notes
+
+router.post('/save/single/report', saveSingleReport) // get  report notes
+router.post('/save/single/report/graph', saveSingleGraph) // get  report notes
+
+router.post('/update/single/report', updateSingleReport) // get  report notes
+router.post('/update/single/report/graph', updateSingleGraph) // get  report notes
+ 
+router.post('/save/group/report/graph', saveGroupGraph) // get  report notes
+
+// router.post('/update/single/report', updateSingleReport) // get  report notes
+router.post('/update/group/report/graph', updateGroupGraph) // get  report notes
+
+
+// Group 
 
 router.get('/group/:id',auth, getGroupByID) // get group by ID
 router.post('/group/create',auth, createNewGroup) // create new group
 router.post('/group/update/:id',auth, updateGroup) // Update Group by ID
 router.post('/group/delete/:id',auth, deleteGroup) // Delete Group 
-
+     
 router.get('/group/profile/:id',auth, getGroupProfileByGroupID) // Get Devices in Group
 router.post('/group/profile/update/:id',auth, updateGroupProfile) // Update Devices in Group by ID
 

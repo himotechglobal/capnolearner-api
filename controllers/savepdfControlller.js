@@ -169,8 +169,8 @@ exports.livesessionImage = (req, resp) => {
                 message: 'Somothing went wrong'
             })
         }
-        console.log(result[0].sessionid)
-        if (result[0].sessionid) {
+        // console.log(result[0].sessionid)
+        if (result[0]) {
             dbConn.query('SELECT * FROM client_session WHERE md5(id) = ?', [result[0].sessionid], (err, resultCid) => {
                 if (err) {
                     resp.status(500).json({
@@ -213,6 +213,12 @@ exports.livesessionImage = (req, resp) => {
                 }
 
 
+            })
+        }
+        else{
+            resp.status(202).json({
+                success: false,
+                message: 'Somothing went wrong'
             })
         }
     })
@@ -239,7 +245,7 @@ exports.livesessionNotes = (req, resp) => {
                 }
                 console.log(resultCid[0].cid)
                 if (resultCid[0].cid) {
-                    dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [resultCid[0].cid], (err, getclientResult) => {
+                    dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [resultCid[0].cid], (err, getclientResult) =>   {
                         if (err) {
                             resp.status(500).json({
                                 success: false,
@@ -280,7 +286,47 @@ exports.livesessionNotes = (req, resp) => {
 
 
 
-exports.getScreenshort = (req, resp) => {
+
+exports.getPrevScreenshot = (req, resp) => {
+    dbConn.query('SELECT * FROM client_session WHERE id < ? and cid = md5(?) order by id  desc limit 0,1 ', [req.params.id,req.params.cid], (err, result) => {
+
+        if(err){
+            resp.status(500).json({
+                success: false,
+                message: 'Somothing went wrong'
+            })
+        }
+
+        if (result[0]) {
+            console.log(result[0].id)
+            dbConn.query('SELECT * FROM session_data_report_pdf WHERE session_id = ?', [result[0].id], (err, getPdfResult) => {
+                if (err) {
+                    resp.status(500).json({
+                        success: false,
+                        message: 'Somothing went wrong'
+                    })
+                }
+                 
+                else{
+                    resp.status(200).json({
+                        success: true,
+                        data: getPdfResult
+                    })
+                }
+            })
+        }
+        else{ 
+            resp.status(202).json({
+                success: false,
+                message: 'not found'
+            })
+        }
+
+    })
+}
+
+
+exports.getScreenshot = (req, resp) => {
     dbConn.query('SELECT * FROM client_session WHERE id = ?', [req.params.id], (err, result) => {
 
         if(err){
