@@ -125,17 +125,22 @@ exports.getExpiredAccount = (req, res)=>{
                                     _lang2 = 'will be expiring'
                                 }
                                 if(result.length > 0 ){
-                                    let _body = 'Dear Customer: <br /><br />Your Betterphysiology software subscription subaccount for '+v.firstname+' '+v.lastname+' with the username '+v.email+' '+_lang+' on '+_date+'.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/group/'+v.id+'">renew the subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
-                                await  sendEmail(result[0].primaryEmail,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
-                                dbConn.query("update capno_users set payReminder = 1 where email = ?",[v.email]) ; 
+                                    if(result[0].primaryEmail){
+                                        let _body = 'Dear Customer: <br /><br />Your Betterphysiology software subscription subaccount for '+v.firstname+' '+v.lastname+' with the username '+v.email+' '+_lang+' on '+_date+'.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/group/'+v.id+'">renew the subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
+                                        await  sendEmail(result[0].primaryEmail,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
+                                        dbConn.query("update capno_users set payReminder = 1 where email = ?",[v.email]) ; 
+        
+                                    }
                                 //   sendEmail(result[0].primaryEmail,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
                                 }
                                 else{
                                     // let _body = 'Dear Customer: <br /><br />Your Betterphysiology software subscription subaccount for '+v.firstname+' '+v.lastname+' with the username '+v.email+' expires on '+_date+'.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">renew the subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
-  
-                                    let _body = 'Dear Customer: <br /><br />Your CapnoLearning software subscription '+_lang2+' on '+_date+'.<br /><br />The user name we have on record is '+v.email+'.<br /><br />The annual subscription fee for the first instrument is $175.00 and $60.00 for each additional instrument.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">renew your subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
-                                await  sendEmail(v.email,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
-                                dbConn.query("update capno_users set payReminder = 1 where email = ?",[v.email]) ; 
+                                    if(v.email){
+                                        let _body = 'Dear Customer: <br /><br />Your CapnoLearning software subscription '+_lang2+' on '+_date+'.<br /><br />The user name we have on record is '+v.email+'.<br /><br />The annual subscription fee for the first instrument is $175.00 and $60.00 for each additional instrument.<br /><br />Please click here to <a href="https://capno-web.herokuapp.com/subscription/renew/'+v.id+'">renew your subscription.</a><br /><br />Thank you.<br /><br />Accounting<br /><b>BETTER PHYSIOLOGY, LTD.</b><br />109 East 17th Street<br />Cheyenne, WY 82001<br />tech@betterphysiology.com.';
+                                        await  sendEmail(v.email,"Renew Subscription for Capnotrainer" , "Renew Subscription for Capnotrainer" , _body);
+                                        dbConn.query("update capno_users set payReminder = 1 where email = ?",[v.email]) ; 
+                                    }
+
                                 }  
 
 
