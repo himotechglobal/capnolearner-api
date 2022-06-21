@@ -25,6 +25,23 @@ Session.getAllSession = (data,result) => {
 } 
 
 
+// get all Client 
+Session.getSessionInfo = (data,result) => {
+   
+  dbConn.query('SELECT client_session.* ,   client.firstname as client_firstname, client.lastname as client_lastname, trainer.firstname as trainer_firstname ,trainer.lastname as trainer_lastname FROM    client_session as client_session LEFT JOIN capno_users as client on md5(client.id) =  client_session.cid LEFT JOIN capno_users as trainer on md5(trainer.id) = client.associated_practioner WHERE   client_session.id = ? ', [data.session_id],  (err, res) => {
+      if (err) {
+        result(err ,null);
+      } else {
+        result(null, res)
+      }
+    })
+
+
+} 
+
+
+
+
 
 
 Session.updateZoomLink = (id,data,result) => {
