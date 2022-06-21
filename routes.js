@@ -37,7 +37,7 @@ const { getUser } = require('./controllers/getUserController');
 // const { getAllForms } = require('./models/blankFormModel');
 const { getAllForm, getClientForm, uploadClientForm, deleteClientForm,deleteTrainerForm, uploadClientHomework,uploadTrainerForm,getTrainerForm,getClientHomework,deleteClientHomework } = require('./controllers/formController');
 const {subscriberUserList,getExpireDate7days,getExpireDate30days,updateExpirydate} = require('./controllers/subscribeuserControlller')
-const {getCompleteforms,getNmaes,getassemblyliveNotes,getassemblyliveimages,assemblypdfreports,getclientformName,getpractionerformname,saveAssemblyreport,getassemblySetionReport,getassemblyReportsesseionNotes} = require('./controllers/assemblyController')
+const {getAssemblylistbyid,assemblylist,updateAssemblyreport,getCompleteforms,getNmaes,getassemblyliveNotes,getassemblyliveimages,assemblypdfreports,getclientformName,getpractionerformname,saveAssemblyreport,getassemblySetionReport,getassemblyReportsesseionNotes} = require('./controllers/assemblyController')
 
 // subscriber user list api
 router.get('/subscriber/user/list',subscriberUserList); // subscriber user list
@@ -60,6 +60,9 @@ router.get('/get/assembly/report/:id',getassemblySetionReport);
 router.get('/get/assembly/Sessionnotes/:id',getassemblyReportsesseionNotes);
 router.get('/get/assembly/liveimages/:id',getassemblyliveimages);
 router.get('/get/livenotes/:id',getassemblyliveNotes);
+router.get('/assembly/list',assemblylist);
+router.get('/assembly/list/by/:id',getAssemblylistbyid);
+router.post('/update/assembly/report/:id',updateAssemblyreport);
           
 router.get('/get/client/formname/:cl_id',getclientformName);
 router.get('/get/practioner/formname/:clientid',getpractionerformname);

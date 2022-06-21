@@ -1,6 +1,39 @@
 const dbConn = require('../dbConnection')
 const md5 = require('md5');
 
+exports.assemblylist = (req, resp) => {
+    dbConn.query('SELECT * FROM assembly_report', (error, result) => {
+        if (error) {
+            resp.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
+        if (result.length > 0) {
+            resp.status(200).json({
+                success: true,
+                data: result
+            })
+        }
+    })
+}
+
+exports.getAssemblylistbyid = (req, resp) => {
+    dbConn.query('SELECT * FROM assembly_report WHERE id =?', [req.params.id], (error, result) => {
+        if (error) {
+            resp.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
+        if (result.length > 0) {
+            resp.status(200).json({
+                success: true,
+                data: result
+            })
+        }
+    })
+}
 
 exports.assemblypdfreports = (req, resp) => {
     console.log(req.params.session_id)
@@ -66,7 +99,7 @@ exports.getpractionerformname = (req, resp) => {
 }
 
 
-// savescreenshort
+
 exports.saveAssemblyreport = (req, resp) => {
 
     var session = req.body.session;
@@ -109,6 +142,39 @@ exports.saveAssemblyreport = (req, resp) => {
 
 }
 
+exports.updateAssemblyreport = (req, resp)=>{
+
+            var pdfrport = req.body.report_desc;
+            let pdfrportjson = JSON.stringify(pdfrport)
+            var livesessiionimg = req.body.session_image_desc;
+            let livesessiionimgjson = JSON.stringify(livesessiionimg)
+
+            const data = [req.body.name,req.body.summary,pdfrportjson,livesessiionimgjson,req.params.id];
+
+            console.log(req.body.name)
+            console.log(req.body.summary)
+            console.log(req.body.report_desc)
+            console.log(req.body.session_image_desc)
+            dbConn.query('UPDATE assembly_report SET name =?,summary = ?,report_desc =?,session_image_desc =? WHERE id = ?', data, (err, result) => {
+                if (err) {
+                    
+                    resp.status(500).json({
+                        success: false,
+                        message: 'DB error',
+                        error: err
+                    })
+                } else {
+                    resp.status(200).json({
+                        success: true,
+                        message: 'Updated Successfully',
+
+                    })
+                }
+            })
+
+        }
+   
+
 exports.getassemblySetionReport = (req, resp) => {
 
     dbConn.query('SELECT * FROM assembly_report WHERE id =?', [req.params.id], (error, result) => {
@@ -118,6 +184,7 @@ exports.getassemblySetionReport = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
+        
         console.log(result[0].reportids)
         if (result[0].reportids) {
             dbConn.query('SELECT * FROM session_data_report_pdf WHERE FIND_IN_SET (id, ?)', [result[0].reportids], (error, finalResult) => {
@@ -130,7 +197,8 @@ exports.getassemblySetionReport = (req, resp) => {
                 if(finalResult.length > 0){
                     resp.status(200).json({
                         success: true,
-                        data: finalResult
+                        data: finalResult,
+                       
                     })
                 }
             })
@@ -366,4 +434,30 @@ exports.getCompleteforms = (req, resp) => {
     })
 }
 
+
+// exports.saveAssemblyFullscreenshort = (req, resp) => {
+//             var report_img = req.body.report_img;
+           
+
+//             const data = [req.body.report_img,req.params.id];
+
+//             dbConn.query('UPDATE assembly_report SET report_img =? WHERE id = ?', data, (err, result) => {
+//                 if (err) {
+                    
+//                     resp.status(500).json({
+//                         success: false,
+//                         message: 'DB error',
+//                         error: err
+//                     })
+//                 } else {
+//                     resp.status(200).json({
+//                         success: true,
+//                         message: 'pdf save Successfully',
+
+//                     })
+//                 }
+//             })
+
+    
+// }
 
