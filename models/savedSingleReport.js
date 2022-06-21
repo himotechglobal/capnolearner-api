@@ -18,6 +18,21 @@ var SavedSingleReport = function(report) {
 
 
 
+
+// get all Client 
+SavedSingleReport.getMultiReportDetail   = (data,result) => {
+   
+  dbConn.query('SELECT * , report_name as name FROM multisession_data_report WHERE   rid = ?    order by `id` desc', [data.id],  (err, res) => {
+      if (err) {
+        result(err ,null);  
+      } else {
+        result(null, res)
+      }
+    })
+
+
+} 
+
 // get all Client 
 SavedSingleReport.getReportDetail   = (data,result) => {
    
@@ -67,7 +82,7 @@ SavedSingleReport.updateGroupGraph = (_data,result) => {
 
   
 
- dbConn.query('UPDATE `client_session_report_graphs` set   `color` =? ,`type` = ?, `avg` =? , `thick` = ?, `xmin` = ?,`xextreme` = ?, `xmax` = ?, `ymin` = ?, `ymax` = ?, `graph_order` = ? ,`comment` = ?, `other_config` =  ? WHERE `clientSerial` = ?  AND `rid` = ?  ' , [data.color,data.type,data.avg, data.thick,data.xmin,data.xextreme,data.xmax,data.ymin,data.ymax,data.graph_order,comment,_other,_data.clientSerial,_data.reportId],  (err, res) => {
+ dbConn.query('UPDATE `client_session_report_graphs` set   `color` =? ,`type` = ?, `avg` =? , `thick` = ?, `xmin` = ?,`xextreme` = ?, `xmax` = ?, `ymin` = ?, `ymax` = ?, `graph_order` = ? ,`comment` = ?, `other_config` =  ? WHERE `clientSerial` = ? AND signal_name = ?  AND `rid` = ?  ' , [data.color,data.type,data.avg, data.thick,data.xmin,data.xextreme,data.xmax,data.ymin,data.ymax,data.graph_order,comment,_other,_data.clientSerial,data.signal,_data.reportId],  (err, res) => {
      if (err) {    
        result(err ,null);
      } else { 

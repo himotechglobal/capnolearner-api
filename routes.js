@@ -26,8 +26,8 @@ const {getpdf,getNotepdf,livesessionImage,livesessionNotes,getScreenshot,getPrev
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,updateGroupProfile, deleteGroup } = require('./controllers/groupController');
-const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getAllDataByType,updateZoomLink } = require('./controllers/sessionController');
-const { getConfigList,getMultiReportSignalList,getReportConfig,viewReportConfig,viewReportDetails,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf,getAllNotes, saveAlternateSingleReport,getAlternateSingleReport,saveAlternateSingleGraph , saveSingleReport , saveMultiReport ,  saveSingleGraph , saveGroupGraph,updateSingleReport,updateSingleGraph,updateGroupGraph } = require('./controllers/reportController');
+const { getSessionList, getRecordList, getSessionAllData, getSessionSignalData ,getSessionInfo,getClientInfo,getAllDataByType,updateZoomLink } = require('./controllers/sessionController');
+const { getConfigList,getMultiReportSignalList,getReportConfig,viewReportConfig,viewMultiReportConfig,viewReportDetails,viewMultiReportDetails,getSavedReportConfig,getSingleReportPdf,getSingleReport,getMultileReport,getMultileReportPdf,getAllNotes, saveAlternateSingleReport,getAlternateSingleReport,saveAlternateSingleGraph , saveSingleReport , saveMultiReport , createMultiReport ,  saveSingleGraph , saveMultiGraph , saveGroupGraph,updateSingleReport,updateSingleGraph,updateGroupGraph } = require('./controllers/reportController');
 
 const { getOwnerProfile,getEmailbyDomain,getEmailForSubscription,getEmailListForSubscription,getExpiredAccount,getGroupPrice,saveEmailForSubscription,renewOwnerProfile, updateOwner,updateSubscriptionsDetails } = require('./controllers/editAdminProfileController');
 const { getRecordingList } = require('./controllers/getRecordingController');
@@ -101,6 +101,7 @@ router.get('/session/record',auth, getRecordList) // get record list
 router.get('/session/data/all',auth, getSessionAllData) // get session data list 
 router.get('/session/data',auth, getSessionSignalData) // get session data list 
 router.get('/session/info',auth, getSessionInfo) // get session data list 
+router.get('/client/info',auth, getClientInfo) // get session data list 
 router.get('/session/data/type',auth, getAllDataByType) // get session data list 
 router.post('/session/zoom/link/:id',auth, updateZoomLink) // get session data list 
 
@@ -117,13 +118,15 @@ router.post('/homework/client/upload',auth, uploadClientHomework) // get session
 router.get('/homework/client',auth, getClientHomework) // get session data list 
 router.post('/forms/trainer/upload',auth, uploadTrainerForm) // upload trainer forms
 
-
+ 
 //Reports
 router.get('/configured/report',auth, getConfigList) // get pre-config reports list 
 router.get('/configured/signals',auth, getMultiReportSignalList) // get multi report signals list 
 router.get('/report/config',auth, getReportConfig) // get pre-config report config
 router.get('/view/report/config',auth, viewReportConfig) // get pre-config report config
+router.get('/view/report/multi/config',auth, viewMultiReportConfig) // get pre-config report config
 router.get('/view/report/details',auth, viewReportDetails) // get pre-config report config
+router.get('/view/multi/report/details',auth, viewMultiReportDetails) // get pre-config report config
 
 router.get('/report/saved/config',auth, getSavedReportConfig) // get saved report config
 router.get('/report/single',auth, getSingleReport) // get single-session report
@@ -134,7 +137,7 @@ router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get multi-sessio
 // router.get('/report/multiple/pdf',auth, getMultileReportPdf) // get pre-config report config
 router.get('/report/notes', auth, getAllNotes) // get  report notes
  
-router.post('/create/multi/session', saveMultiReport) // get  report notes
+router.post('/create/multi/session', createMultiReport) // get  report notes
 // router.post('/save/single/report/graph', saveSingleGraph) // get  report notes
 
 
@@ -148,6 +151,12 @@ router.post('/save/single/alertnate/report/graph', saveAlternateSingleGraph) // 
 
 router.post('/save/single/report', saveSingleReport) // get  report notes
 router.post('/save/single/report/graph', saveSingleGraph) // get  report notes
+
+router.post('/save/multi/report', saveMultiReport) // get  report notes
+router.post('/save/multi/report/graph', saveMultiGraph) // get  report notes
+
+
+ 
 
 router.post('/update/single/report', updateSingleReport) // get  report notes
 router.post('/update/single/report/graph', updateSingleGraph) // get  report notes

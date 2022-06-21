@@ -63,6 +63,24 @@ exports.getSessionAllImages = (req, res) => {
 
 }
 
+
+
+// get   Session Info
+exports.getClientInfo = (req, res) => {
+ 
+    Session.getClientInfo(req.query,(err, session) => {
+        if(err)
+        throw new Error(err)
+        return res.status(200).json({ 
+            status: true,
+            session
+        })
+    })
+
+
+}
+
+
 // get   Session Info
 exports.getSessionInfo = (req, res) => {
  

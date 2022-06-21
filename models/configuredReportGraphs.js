@@ -16,6 +16,20 @@ var ConfiguredReportGraph = function(report) {
 
 
 
+
+// get all Config 
+ConfiguredReportGraph.getMultiReportGraph = (data,result) => {
+ 
+  dbConn.query('SELECT * FROM client_multi_session_report_graphs WHERE    rid = ?   order by `graph_order` asc', [data.report_id],  (err, res) => {
+    if (err) {
+      result(err ,null);
+    } else {
+      result(null, res)
+    }
+  })
+ }
+
+
 // get all Config 
 ConfiguredReportGraph.getAllReportGraph = (data,result) => {
  

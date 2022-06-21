@@ -45,9 +45,9 @@ Session.updateZoomLink = (id,data,result) => {
 } 
 
 
-Session.getSessionInfo = (data,result) => {
+Session.getClientInfo = (data,result) => {
    
-  dbConn.query('SELECT session.* , client.firstname as client_firstname, client.lastname as client_lastname, trainer.firstname as trainer_firstname ,trainer.lastname as trainer_lastname FROM client_session as session LEFT JOIN   capno_users as client on md5(client.id) = session.cid LEFT JOIN capno_users as trainer on md5(trainer.id) = client.associated_practioner WHERE   session.id = ?   order by `id` desc', [data.session_id ],  (err, res) => {
+  dbConn.query('SELECT   client.firstname as client_firstname, client.lastname as client_lastname, trainer.firstname as trainer_firstname ,trainer.lastname as trainer_lastname FROM    capno_users as client   LEFT JOIN capno_users as trainer on md5(trainer.id) = client.associated_practioner WHERE   client.id = ?   order by client.`id` desc', [data.cid ],  (err, res) => {
       if (err) {
         result(err ,null);
       } else {
