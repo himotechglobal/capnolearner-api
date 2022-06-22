@@ -1,12 +1,40 @@
 
 const dbConn = require('../dbConnection')
 
+exports.allAccounts = (req, resp) => {
+
+    dbConn.query('SELECT * FROM capno_users WHERE status = 1', (err, result) => {
+        if (err)
+            throw new Error(err)
+        return resp.status(200).json({
+            success: true,
+            data:result
+        })
+
+    })
+}
+
+
+exports.subscribedAccounts = (req, resp) => {
+
+    const seconds = new Date().getTime()/1e3;
+
+    dbConn.query('SELECT * FROM capno_users WHERE expire_account > ? and status = 1 ',[seconds], (err, result) => {
+        if (err)
+            throw new Error(err)
+        return resp.status(200).json({
+            success: true,
+            result
+        })
+
+    })
+}
 
 exports.subscriberUserList = (req, resp) => {
 
     const seconds = new Date().getTime()/1e3;
 
-    dbConn.query('SELECT * FROM capno_users WHERE expire_account < ? ',[seconds], (err, result) => {
+    dbConn.query('SELECT * FROM capno_users WHERE expire_account < ? and status = 1',[seconds], (err, result) => {
         if (err)
             throw new Error(err)
         return resp.status(200).json({
@@ -36,10 +64,12 @@ exports.getExpireDate7days = (req, resp)=>{
 
    
      const seconds = new Date().getTime()/1e3;
+     console.log(seconds)
      const sevendays = seconds + 7*86400;
      console.log(sevendays)
+     
 
-     dbConn.query('SELECT * FROM capno_users WHERE expire_account >= ? and expire_account <= ?',[seconds,sevendays], (err, result) => {
+     dbConn.query('SELECT * FROM capno_users WHERE expire_account >= ? and expire_account <= ? and status = 1',[seconds,sevendays], (err, result) => {
         if (err)
             throw new Error(err)
         return resp.status(200).json({
@@ -58,7 +88,7 @@ exports.getExpireDate30days = (req, resp)=>{
     const Thirtydays = seconds + 30*86400;
     console.log(Thirtydays)
 
-    dbConn.query('SELECT * FROM capno_users WHERE expire_account >= ? and expire_account <= ?',[seconds,Thirtydays], (err, result) => {
+    dbConn.query('SELECT * FROM capno_users WHERE expire_account >= ? and expire_account <= ? and status = 1',[seconds,Thirtydays], (err, result) => {
        if (err)
            throw new Error(err)
        return resp.status(200).json({

@@ -36,11 +36,19 @@ const { getHardwareProfileListFive, getHardwareProfileListSix , updateHardwarePr
 const { getUser } = require('./controllers/getUserController');
 // const { getAllForms } = require('./models/blankFormModel');
 const { getAllForm, getClientForm, uploadClientForm, deleteClientForm,deleteTrainerForm, uploadClientHomework,uploadTrainerForm,getTrainerForm,getClientHomework,deleteClientHomework } = require('./controllers/formController');
-const {subscriberUserList,getExpireDate7days,getExpireDate30days,updateExpirydate} = require('./controllers/subscribeuserControlller')
+const {subscribedAccounts,allAccounts,subscriberUserList,getExpireDate7days,getExpireDate30days,updateExpirydate} = require('./controllers/subscribeuserControlller')
 const {getAssemblylistbyid,assemblylist,updateAssemblyreport,getCompleteforms,getNmaes,getassemblyliveNotes,getassemblyliveimages,assemblypdfreports,getclientformName,getpractionerformname,saveAssemblyreport,getassemblySetionReport,getassemblyReportsesseionNotes} = require('./controllers/assemblyController')
+const {getDomains,getonlineAccessList,getEmail} = require('./controllers/onlineAccessController')
+
+// onlineaccess api
+router.get('/get/onlineaccess/list',getonlineAccessList); // online Access list
+router.get('/get/email/list/:email/:type',getEmail); // get email list
+router.get('/get/domain/list/:domains/:type',getDomains); // get getDomains list
 
 // subscriber user list api
 router.get('/subscriber/user/list',subscriberUserList); // subscriber user list
+router.get('/subscriber/all/accounts/list',allAccounts); // subscriber allAccounts user list
+router.get('/subscribed/accounts/list',subscribedAccounts); // subscribed Accounts user list
 router.get('/exprie/next/sevendays',getExpireDate7days); // 7 days expridate api user list
 router.get('/exprie/next/thirtydays',getExpireDate30days); // 30 days expridate api user list
 router.get('/pdf/list/:id',getpdf);
