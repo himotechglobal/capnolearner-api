@@ -120,3 +120,17 @@ exports.updateonlineAccessBydomain = (req, res) => {
 
 }
 
+exports.updateonlineAccess = (req, resp)=>{
+    console.log(req.params.id)
+    dbConn.query("UPDATE capno_users SET onlineAccess = 1 WHERE id = ? ", [req.params.id], (error, result) => {
+        if (error) throw error;
+        if (result) {
+            resp.status(200).json({
+                success: true,
+                message: 'Updated online access successfully'
+            })
+        }
+    });
+
+}
+
