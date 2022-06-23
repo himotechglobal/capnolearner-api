@@ -3,7 +3,7 @@ const dbConn = require('../dbConnection')
 
 exports.allAccounts = (req, resp) => {
 
-    dbConn.query('SELECT * FROM capno_users WHERE status = 1 ORDER BY firstname', (err, result) => {
+    dbConn.query('SELECT * FROM capno_users WHERE status = 1 and user_type = 1 ORDER BY firstname', (err, result) => {
         if (err)
             throw new Error(err)
         return resp.status(200).json({
@@ -19,7 +19,7 @@ exports.subscribedAccounts = (req, resp) => {
 
     const seconds = new Date().getTime()/1e3;
 
-    dbConn.query('SELECT * FROM capno_users WHERE expire_account > ? and status = 1 ORDER BY firstname',[seconds], (err, result) => {
+    dbConn.query('SELECT * FROM capno_users WHERE expire_account > ? and status = 1 and user_type = 1 ORDER BY firstname',[seconds], (err, result) => {
         if (err)
             throw new Error(err)
         return resp.status(200).json({
@@ -34,7 +34,7 @@ exports.subscriberUserList = (req, resp) => {
 
     const seconds = new Date().getTime()/1e3;
 
-    dbConn.query('SELECT * FROM capno_users WHERE expire_account < ? and status = 1 ORDER BY firstname',[seconds], (err, result) => {
+    dbConn.query('SELECT * FROM capno_users WHERE expire_account < ? and status = 1 and user_type = 1 ORDER BY firstname',[seconds], (err, result) => {
         if (err)
             throw new Error(err)
         return resp.status(200).json({
@@ -105,7 +105,7 @@ exports.getExpireDate7days = (req, resp)=>{
      console.log(sevendays)
      
 
-     dbConn.query('SELECT * FROM capno_users WHERE expire_account >= ? and expire_account <= ? and status = 1 ORDER BY firstname',[seconds,sevendays], (err, result) => {
+     dbConn.query('SELECT * FROM capno_users WHERE expire_account >= ? and expire_account <= ? and status = 1 and user_type = 1 ORDER BY firstname',[seconds,sevendays], (err, result) => {
         if (err)
             throw new Error(err)
         return resp.status(200).json({
@@ -124,7 +124,7 @@ exports.getExpireDate30days = (req, resp)=>{
     const Thirtydays = seconds + 30*86400;
     console.log(Thirtydays)
 
-    dbConn.query('SELECT * FROM capno_users WHERE expire_account >= ? and expire_account <= ? and status = 1 ORDER BY firstname',[seconds,Thirtydays], (err, result) => {
+    dbConn.query('SELECT * FROM capno_users WHERE expire_account >= ? and expire_account <= ? and status = 1 and user_type = 1 ORDER BY firstname',[seconds,Thirtydays], (err, result) => {
        if (err)
            throw new Error(err)
        return resp.status(200).json({

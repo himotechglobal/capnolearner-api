@@ -47,7 +47,7 @@ exports.getEmail = (req, res) => {
 exports.updateonlineAccessByemail = (req, res) => {
 
     const data = [req.body.onlineAccess, req.params.email];
-    console.log(req.params.emails)
+    console.log(req.params.email)
     console.log(req.body.onlineAccess)
 
     dbConn.query('UPDATE capno_users SET onlineAccess = ? WHERE email = ?', data, (err, result) => {
@@ -95,6 +95,28 @@ exports.getDomains = (req, res) => {
     })
 
 
+
+}
+
+exports.updateonlineAccessBydomain = (req, res) => {
+
+    const data = [req.body.onlineAccess];
+    console.log(req.params.domain)
+    console.log(req.body.onlineAccess)
+    dbConn.query("UPDATE capno_users SET onlineAccess = ?  WHERE email  LIKE  '%" + "@" + req.params.domain + "%'",[data], (err, result) => {
+        if (err) {
+            console.log(err)
+            res.status(500).json({
+                success: false,
+                message: 'err',
+            })
+        } else {
+            res.status(200).json({
+                success: true,
+                message: "Updated Successfully",
+            })
+        }
+    })
 
 }
 
