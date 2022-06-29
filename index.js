@@ -24,6 +24,16 @@ app.use(express.json({limit: '50mb'}));
 // app.use(formidable());
 app.use('/api' ,routes);
 // Handling Errors
+
+setInterval(() => {
+  dbConn.query("select 1", (err, users) => {
+    if (err)
+        throw new Error(err)
+     
+  
+  })
+}, 900000);
+
 app.use((err, req, res, next) => {
     // console.log(err);
     err.statusCode = err.statusCode || 500;
