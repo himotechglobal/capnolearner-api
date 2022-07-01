@@ -1,5 +1,9 @@
 const dbConn = require('../dbConnection')
 const md5 = require('md5');
+const path = require('path'); 
+const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
+const fetch = require("node-fetch");
+const fs = require('fs');
 
 exports.assemblylist = (req, resp) => {
     dbConn.query('SELECT * FROM assembly_report', (error, result) => {
@@ -142,38 +146,38 @@ exports.saveAssemblyreport = (req, resp) => {
 
 }
 
-exports.updateAssemblyreport = (req, resp)=>{
+exports.updateAssemblyreport = (req, resp) => {
 
-            var pdfrport = req.body.report_desc;
-            let pdfrportjson = JSON.stringify(pdfrport)
-            var livesessiionimg = req.body.session_image_desc;
-            let livesessiionimgjson = JSON.stringify(livesessiionimg)
+    var pdfrport = req.body.report_desc;
+    let pdfrportjson = JSON.stringify(pdfrport)
+    var livesessiionimg = req.body.session_image_desc;
+    let livesessiionimgjson = JSON.stringify(livesessiionimg)
 
-            const data = [req.body.name,req.body.summary,pdfrportjson,livesessiionimgjson,req.params.id];
+    const data = [req.body.name, req.body.summary, pdfrportjson, livesessiionimgjson, req.params.id];
 
-            console.log(req.body.name)
-            console.log(req.body.summary)
-            console.log(req.body.report_desc)
-            console.log(req.body.session_image_desc)
-            dbConn.query('UPDATE assembly_report SET name =?,summary = ?,report_desc =?,session_image_desc =? WHERE id = ?', data, (err, result) => {
-                if (err) {
-                    
-                    resp.status(500).json({
-                        success: false,
-                        message: 'DB error',
-                        error: err
-                    })
-                } else {
-                    resp.status(200).json({
-                        success: true,
-                        message: 'Updated Successfully',
+    console.log(req.body.name)
+    console.log(req.body.summary)
+    console.log(req.body.report_desc)
+    console.log(req.body.session_image_desc)
+    dbConn.query('UPDATE assembly_report SET name =?,summary = ?,report_desc =?,session_image_desc =? WHERE id = ?', data, (err, result) => {
+        if (err) {
 
-                    })
-                }
+            resp.status(500).json({
+                success: false,
+                message: 'DB error',
+                error: err
             })
+        } else {
+            resp.status(200).json({
+                success: true,
+                message: 'Updated Successfully',
 
+            })
         }
-   
+    })
+
+}
+
 
 exports.getassemblySetionReport = (req, resp) => {
 
@@ -184,7 +188,7 @@ exports.getassemblySetionReport = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
-        
+
         console.log(result[0].reportids)
         if (result[0].reportids) {
             dbConn.query('SELECT * FROM session_data_report_pdf WHERE FIND_IN_SET (id, ?)', [result[0].reportids], (error, finalResult) => {
@@ -194,11 +198,11 @@ exports.getassemblySetionReport = (req, resp) => {
                         message: 'Something went wrong'
                     })
                 }
-                if(finalResult.length > 0){
+                if (finalResult.length > 0) {
                     resp.status(200).json({
                         success: true,
                         data: finalResult,
-                       
+
                     })
                 }
             })
@@ -256,8 +260,8 @@ exports.getassemblyliveimages = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
-        console.log(result[0].session)
-        if (result[0].session) {
+
+        if (result[0]) {
             dbConn.query('SELECT * FROM capno_data WHERE sessionid = md5(?) and data_type = 3', [result[0].session], (error, finalResult) => {
                 if (error) {
                     resp.status(500).json({
@@ -285,7 +289,7 @@ exports.getassemblyliveNotes = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
-        if (result[0].session) {
+        if (result[0]) {
             dbConn.query('SELECT * FROM capno_data WHERE sessionid = md5(?) and data_type = 4', [result[0].session], (error, finalResult) => {
                 if (error) {
                     resp.status(500).json({
@@ -385,16 +389,16 @@ exports.getNmaes = (req, resp) => {
 //                         message: 'Something went wrong'
 //                     })
 //                 }
-              
+
 //                 if(resultFormName.length > 0){
-              
-                        
+
+
 //                             resp.status(200).json({
 //                                 success: true,
 //                                 data: resultFormName,
-                                
+
 //                             })
-                    
+
 //                 }
 //             })
 //         }
@@ -412,22 +416,22 @@ exports.getCompleteforms = (req, resp) => {
         }
         console.log(result[0].forms)
         if (result[0].forms) {
-            dbConn.query('SELECT client_form.form_name,client_form.form,blank_forms.forms FROM client_form LEFT JOIN blank_forms ON client_form.form_name = blank_forms.id WHERE FIND_IN_SET (client_form.form_name, ?) and client_form.cl_id = md5(?)', [result[0].forms,req.params.cl_id], (error, resultFormName) => {
+            dbConn.query('SELECT client_form.form_name,client_form.form,blank_forms.forms FROM client_form LEFT JOIN blank_forms ON client_form.form_name = blank_forms.id WHERE FIND_IN_SET (client_form.form_name, ?) and client_form.cl_id = md5(?)', [result[0].forms, req.params.cl_id], (error, resultFormName) => {
                 if (error) {
                     resp.status(500).json({
                         success: false,
                         message: 'Something went wrong'
                     })
                 }
-              
-                if(resultFormName.length > 0){
 
-                            resp.status(200).json({
-                                success: true,
-                                data: resultFormName,
-                                
-                            })
-                    
+                if (resultFormName.length > 0) {
+
+                    resp.status(200).json({
+                        success: true,
+                        data: resultFormName,
+
+                    })
+
                 }
             })
         }
@@ -473,7 +477,7 @@ exports.getFullscreenshort2 = (req, resp) => {
     let sessionDates = [];
     let ClientName = [];
     let trainerName = [];
-  
+
     let summaryName = [];
     let summaryDes = [];
     let pdfArray = [];
@@ -523,14 +527,14 @@ exports.getFullscreenshort2 = (req, resp) => {
                                     })
                                 }
                                 if (finalResult.length > 0) {
-                                        sessionDates.push(resultCid[0].name),
+                                    sessionDates.push(resultCid[0].name),
                                         ClientName.push(getclientResult[0].firstname + " " + getclientResult[0].lastname),
                                         trainerName.push(finalResult[0].firstname + " " + getclientResult[0].lastname)
-                                      
+
                                     // resp.status(200).json({
                                     //     success: true,
                                     //     data: finalResult,
-                                        
+
 
                                     // })
                                 }
@@ -553,7 +557,7 @@ exports.getFullscreenshort2 = (req, resp) => {
             })
         }
         if (result.length > 0) {
-           
+
             summaryName.push(result[0].name);
             summaryDes.push(result[0].summary);
             pdfreportDescriptionArray.push(JSON.parse(result[0].report_desc));
@@ -704,7 +708,7 @@ exports.getFullscreenshort2 = (req, resp) => {
 
 
 
-    setTimeout(async () => {
+    setTimeout( async() => {
         let flatsessionDates = sessionDates.flat();
         let stringsessionDates = flatsessionDates.toString();
         let flatClientName = ClientName.flat();
@@ -714,7 +718,7 @@ exports.getFullscreenshort2 = (req, resp) => {
         let stringsummaryName = summaryName.toString();
         let stringsummaryDes = summaryDes.toString();
 
-        
+
         let flatpdfArray = pdfArray.flat();
         let flatpdfreportDestionArray = pdfreportDescriptionArray.flat();
         let flatliveSessionNoteArray = liveSessionNoteArray.flat();
@@ -736,7 +740,7 @@ exports.getFullscreenshort2 = (req, resp) => {
         const page3 = pdfDoc.addPage();
 
         let headingcapno = fs.readFileSync("./heading.png");
-     
+
         headingcapno = await pdfDoc.embedPng(headingcapno)
 
         const headingcapnoimgbox = headingcapno.scale(0.6);
@@ -751,14 +755,14 @@ exports.getFullscreenshort2 = (req, resp) => {
         });
         const { width, height } = page3.getSize()
         const summaryfontSize = 11
-       
+
         page3.drawText('Client Name:', {
             x: 20,
             y: height - 6 * summaryfontSize,
             size: summaryfontSize,
             color: rgb(0, 0, 0),
             font: HelveticaBoldfont,
-           
+
         })
         const summaryfontSize2 = 11
         page3.drawText(stringClientName, {
@@ -767,7 +771,7 @@ exports.getFullscreenshort2 = (req, resp) => {
             size: summaryfontSize2,
             color: rgb(0, 0, 0),
         })
-        
+
         page3.drawText('Trainer Name:', {
             x: 20,
             y: height - 8 * summaryfontSize,
@@ -775,14 +779,14 @@ exports.getFullscreenshort2 = (req, resp) => {
             color: rgb(0, 0, 0),
             font: HelveticaBoldfont,
         })
-       
+
         page3.drawText(stringtrainerName, {
             x: 110,
             y: height - 8 * summaryfontSize2,
             size: summaryfontSize2,
             color: rgb(0, 0, 0),
         })
-       
+
         page3.drawText('Session Date:', {
             x: 20,
             y: height - 10 * summaryfontSize,
@@ -805,13 +809,13 @@ exports.getFullscreenshort2 = (req, resp) => {
             color: rgb(0, 0, 0),
             font: HelveticaBoldfont,
         })
-        page3.drawText(stringsummaryName? stringsummaryName : "No report name", {
+        page3.drawText(stringsummaryName ? stringsummaryName : "No report name", {
             x: 120,
             y: height - 16 * fontSizeSummary,
             size: fontSizeSummary,
             color: rgb(0, 0, 0),
         })
-       
+
         page3.drawText("Report Summary:", {
             x: 20,
             y: height - 18 * summaryfontSize,
@@ -820,14 +824,14 @@ exports.getFullscreenshort2 = (req, resp) => {
             font: HelveticaBoldfont,
         })
 
-        page3.drawText(stringsummaryDes? stringsummaryDes: "No report summary", {
+        page3.drawText(stringsummaryDes ? stringsummaryDes : "No report summary", {
             x: 120,
             y: height - 18 * summaryfontSize,
             size: fontSizeSummary,
             color: rgb(0, 0, 0),
         })
 
-   
+
 
         var pdfArrayrequiredPages = flatpdfArray.length
 
@@ -835,7 +839,7 @@ exports.getFullscreenshort2 = (req, resp) => {
             const HelveticaBoldfont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
             const page1 = pdfDoc.addPage();
-            
+
             const { width, height } = page1.getSize()
             const fontSize = 12
             page1.drawText('PDF Report' + " " + "(" + (i + 1) + ")", {
@@ -868,11 +872,11 @@ exports.getFullscreenshort2 = (req, resp) => {
                 color: rgb(0, 0, 0),
             })
             const fontSizepdfArray = 12
-            page1.drawText(flatpdfreportDestionArray[i]? flatpdfreportDestionArray[i]: "No pdf report description ", {
+            page1.drawText(flatpdfreportDestionArray[i] ? flatpdfreportDestionArray[i] : "No pdf report description ", {
                 x: 20,
                 y: height - 32 * fontSize,
                 size: fontSizepdfArray,
-             
+
                 color: rgb(0, 0, 0),
             })
 
@@ -880,7 +884,7 @@ exports.getFullscreenshort2 = (req, resp) => {
 
 
         const page1 = pdfDoc.addPage();
-  
+
         const fontSize = 12
         page1.drawText('Live Session Notes', {
             x: 20,
@@ -890,8 +894,8 @@ exports.getFullscreenshort2 = (req, resp) => {
             font: HelveticaBoldfont,
         })
         const fontSizepdfArray = 12
-     
-        page1.drawText(liveSessionNote? liveSessionNote: "No live session notes", {
+
+        page1.drawText(liveSessionNote ? liveSessionNote : "No live session notes", {
             x: 20,
             y: height - 4 * fontSize,
             size: fontSizepdfArray,
@@ -903,7 +907,7 @@ exports.getFullscreenshort2 = (req, resp) => {
         for (var i = 0; i < liveimgrequiredPages; i++) {
             const HelveticaBoldfont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
             const page1 = pdfDoc.addPage();
-       
+
             const { width, height } = page1.getSize()
             const fontSize = 12
             page1.drawText('Live Session Image' + " " + "(" + (i + 1) + ")", {
@@ -928,7 +932,7 @@ exports.getFullscreenshort2 = (req, resp) => {
 
             });
 
-            page1.drawText('Live Session Image Description' + " "+ "(" + (i + 1) + ")", {
+            page1.drawText('Live Session Image Description' + " " + "(" + (i + 1) + ")", {
                 x: 20,
                 y: height - 30 * fontSize,
                 size: fontSize,
@@ -936,7 +940,7 @@ exports.getFullscreenshort2 = (req, resp) => {
                 color: rgb(0, 0, 0),
             })
             const fontSizepdfArray = 12
-            page1.drawText(flatliveimgSessionDesArray[i]? flatliveimgSessionDesArray[i]: "No livesession image description", {
+            page1.drawText(flatliveimgSessionDesArray[i] ? flatliveimgSessionDesArray[i] : "No livesession image description", {
                 x: 20,
                 y: height - 32 * fontSize,
                 size: fontSizepdfArray,
@@ -949,7 +953,7 @@ exports.getFullscreenshort2 = (req, resp) => {
         }
 
         const page4 = pdfDoc.addPage();
-  
+
         const fontSizelivesessionNote = 12
         page4.drawText('Report Notes', {
             x: 20,
@@ -959,21 +963,21 @@ exports.getFullscreenshort2 = (req, resp) => {
             font: HelveticaBoldfont,
         })
         const fontSizelivesessiondes = 12
-        
-        page4.drawText(stringreportNotesArray? stringreportNotesArray: "No report notes", {
+
+        page4.drawText(stringreportNotesArray ? stringreportNotesArray : "No report notes", {
             x: 20,
             y: height - 4 * fontSizelivesessiondes,
             size: fontSizelivesessiondes,
             color: rgb(0, 0, 0),
         })
 
-           var completeformrequiredPages = flatcompleteFormArray.length
+        var completeformrequiredPages = flatcompleteFormArray.length
 
-           for (var i = 0; i < completeformrequiredPages; i++) {
+        for (var i = 0; i < completeformrequiredPages; i++) {
 
             const HelveticaBoldfont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
             const page2 = pdfDoc.addPage();
-           
+
             const { width, height } = page2.getSize()
             const fontSize = 12
             page2.drawText(flatcompleteFormArray[i].forms, {
@@ -981,7 +985,7 @@ exports.getFullscreenshort2 = (req, resp) => {
                 y: height - 2 * fontSize,
                 size: fontSize,
                 font: HelveticaBoldfont,
-                color: rgb(0,0,0),
+                color: rgb(0, 0, 0),
             })
             const pdfUrls = pdfUrl + flatcompleteFormArray[i].form;
             console.log(pdfUrls)
@@ -994,39 +998,40 @@ exports.getFullscreenshort2 = (req, resp) => {
             page2.drawPage(compleformpdf, {
                 ...completeformDims,
                 x: page2.getWidth() / 1 - completeformDims.width / 1,
-                y: page2.getHeight()/ 1 - completeformDims.height / 1,
+                y: page2.getHeight() / 1 - completeformDims.height / 1,
             });
 
         }
 
+
+        fs.writeFileSync("./output.pdf", await pdfDoc.save())
        
-       fs.writeFileSync("./output.pdf",await pdfDoc.save())
 
-    //    var data =fs.readFileSync('./output.pdf');
-    //    resp.contentType("application/pdf");
-    //    resp.send(data);
-  
+           var data =fs.readFileSync('./output.pdf');
+           resp.contentType("application/pdf");
+           resp.send(data);
 
-    
 
-        let _resp = {
-            success: true,
-            sessionDates: sessionDates,
-            ClientName: ClientName,
-            trainerName: trainerName,
-            summaryName: summaryName,
-            summaryDes: summaryDes,
-            pdfArray: pdfArray,
-            pdfreportDescriptionArray: pdfreportDescriptionArray,
-            liveSessionNoteArray: liveSessionNoteArray,
-            liveSessionimgArray: liveSessionimgArray,
-            liveimgSessionDesArray: liveimgSessionDesArray,
-            reportNotesArray: reportNotesArray,
-            completeFormArray: completeFormArray
 
-        }
 
-        return resp.status(200).json(_resp)
+        // let _resp = {
+        //     success: true,
+        //     sessionDates: sessionDates,
+        //     ClientName: ClientName,
+        //     trainerName: trainerName,
+        //     summaryName: summaryName,
+        //     summaryDes: summaryDes,
+        //     pdfArray: pdfArray,
+        //     pdfreportDescriptionArray: pdfreportDescriptionArray,
+        //     liveSessionNoteArray: liveSessionNoteArray,
+        //     liveSessionimgArray: liveSessionimgArray,
+        //     liveimgSessionDesArray: liveimgSessionDesArray,
+        //     reportNotesArray: reportNotesArray,
+        //     completeFormArray: completeFormArray
+
+        // }
+
+        // return resp.status(200).json(_resp)
 
 
     }, 30000);
