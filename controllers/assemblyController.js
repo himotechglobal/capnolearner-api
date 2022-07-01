@@ -435,29 +435,600 @@ exports.getCompleteforms = (req, resp) => {
 }
 
 
-// exports.saveAssemblyFullscreenshort = (req, resp) => {
-//             var report_img = req.body.report_img;
+exports.saveAssemblyFullscreenshort = (req, resp) => {
+    // var report_img = req.body.report_img;
+
+
+    const data = [req.body.report_img, req.params.id];
+    // console.log(req.body.report_img)
+
+    // const doc = new jsPDF();
+
+    // doc.addImage(req.body.report_img, 10, 15,200,115);
+
+    // doc.save("a4.pdf");
+
+    dbConn.query('UPDATE assembly_report SET report_img =? WHERE id = ?', data, (err, result) => {
+        if (err) {
+
+            resp.status(500).json({
+                success: false,
+                message: 'DB error',
+                error: err
+            })
+        } else {
+            resp.status(200).json({
+                success: true,
+                message: 'pdf save Successfully',
+
+            })
+        }
+    })
+
+
+}
+
+
+exports.getFullscreenshort2 = (req, resp) => {
+    let sessionDates = [];
+    let ClientName = [];
+    let trainerName = [];
+  
+    let summaryName = [];
+    let summaryDes = [];
+    let pdfArray = [];
+    let pdfreportDescriptionArray = [];
+    let liveSessionNoteArray = [];
+    let liveSessionimgArray = [];
+    let liveimgSessionDesArray = [];
+    let reportNotesArray = [];
+    let completeFormArray = [];
+
+
+
+
+    dbConn.query('SELECT * FROM assembly_report WHERE id = ?', [req.params.id], (err, result) => {
+        if (err) {
+            resp.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
+        console.log(result[0].session)
+        if (result[0].session) {
+
+            dbConn.query('SELECT * FROM client_session WHERE id = ?', [result[0].session], (err, resultCid) => {
+                if (err) {
+                    resp.status(500).json({
+                        success: false,
+                        message: 'Something went wrong'
+                    })
+                }
+                console.log(resultCid[0].cid)
+                if (resultCid[0].cid) {
+                    dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [resultCid[0].cid], (err, getclientResult) => {
+                        if (err) {
+                            resp.status(500).json({
+                                success: false,
+                                message: 'Something went wrong'
+                            })
+                        }
+                        if (getclientResult[0].associated_practioner) {
+                            dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [getclientResult[0].associated_practioner], (err, finalResult) => {
+
+                                if (err) {
+                                    resp.status(500).json({
+                                        success: false,
+                                        message: 'Somothing went wrong'
+                                    })
+                                }
+                                if (finalResult.length > 0) {
+                                        sessionDates.push(resultCid[0].name),
+                                        ClientName.push(getclientResult[0].firstname + " " + getclientResult[0].lastname),
+                                        trainerName.push(finalResult[0].firstname + " " + getclientResult[0].lastname)
+                                      
+                                    // resp.status(200).json({
+                                    //     success: true,
+                                    //     data: finalResult,
+                                        
+
+                                    // })
+                                }
+                            })
+                        }
+                    })
+                }
+
+
+            })
+        }
+
+
+    })
+    dbConn.query('SELECT * FROM assembly_report WHERE id =?', [req.params.id], (error, result) => {
+        if (error) {
+            resp.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
+        if (result.length > 0) {
            
+            summaryName.push(result[0].name);
+            summaryDes.push(result[0].summary);
+            pdfreportDescriptionArray.push(JSON.parse(result[0].report_desc));
+            liveimgSessionDesArray.push(JSON.parse(result[0].session_image_desc));
+            // resp.status(200).json({
+            //     success: true,
+            //     data:result
+            // })
+        }
 
-//             const data = [req.body.report_img,req.params.id];
+    })
 
-//             dbConn.query('UPDATE assembly_report SET report_img =? WHERE id = ?', data, (err, result) => {
-//                 if (err) {
-                    
-//                     resp.status(500).json({
-//                         success: false,
-//                         message: 'DB error',
-//                         error: err
-//                     })
-//                 } else {
-//                     resp.status(200).json({
-//                         success: true,
-//                         message: 'pdf save Successfully',
+    dbConn.query('SELECT * FROM assembly_report WHERE id =?', [req.params.id], (error, result) => {
+        if (error) {
+            resp.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
 
-//                     })
-//                 }
-//             })
+        console.log(result[0].reportids)
+        if (result[0].reportids) {
+            dbConn.query('SELECT * FROM session_data_report_pdf WHERE FIND_IN_SET (id, ?)', [result[0].reportids], (error, finalResult) => {
+                if (error) {
+                    resp.status(500).json({
+                        success: false,
+                        message: 'Something went wrong'
+                    })
+                }
+                if (finalResult.length > 0) {
+                    pdfArray.push(finalResult)
+
+
+                    // resp.status(200).json({
+                    //     success: true,
+                    //     data: finalResult,
+
+                    // })
+                }
+            })
+        }
+    })
+
+    dbConn.query('SELECT * FROM assembly_report WHERE id = ? and lnotes = 1', [req.params.id], (error, result) => {
+        if (error) {
+            resp.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
+        if (result[0].session) {
+            dbConn.query('SELECT * FROM capno_data WHERE sessionid = md5(?) and data_type = 4', [result[0].session], (error, livesessionNoteResult) => {
+                if (error) {
+                    resp.status(500).json({
+                        success: false,
+                        message: 'Something went wrong'
+                    })
+                }
+                if (livesessionNoteResult.length > 0) {
+                    liveSessionNoteArray.push(livesessionNoteResult[0].sessiondata)
+                    // resp.status(200).json({
+                    //     success: true,
+                    //     data: livesessionNoteResult
+                    // })
+                }
+            })
+        }
+    })
+
+
+
+    dbConn.query('SELECT * FROM assembly_report WHERE id = ? and limages = 1', [req.params.id], (error, result) => {
+        if (error) {
+            resp.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
+        console.log(result[0].session)
+        if (result[0].session) {
+            dbConn.query('SELECT * FROM capno_data WHERE sessionid = md5(?) and data_type = 3', [result[0].session], (error, liveSessionimgResult) => {
+                if (error) {
+                    resp.status(500).json({
+                        success: false,
+                        message: 'Something went wrong'
+                    })
+                }
+                if (liveSessionimgResult.length > 0) {
+
+                    liveSessionimgArray.push(liveSessionimgResult)
+
+                    // resp.status(200).json({
+                    //     success: true,
+                    //     data: liveSessionResult
+                    // })
+                }
+            })
+        }
+    })
+
+
+    dbConn.query('SELECT assembly_report.rnotes,assembly_report.id,client_session_report.notes FROM assembly_report LEFT JOIN client_session_report ON assembly_report.session = client_session_report.session_id WHERE assembly_report.id = ? and rnotes = 1 ', [req.params.id], (error, reportNotesResult) => {
+        if (error) {
+            resp.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
+        if (reportNotesResult.length > 0) {
+            reportNotesArray.push(reportNotesResult[0].notes)
+            console.log(reportNotesResult[0].notes)
+            // resp.status(200).json({
+            //     success: true,
+            //     data: reportNotesResult
+            // })
+        }
+    })
+
+    dbConn.query('SELECT * FROM assembly_report WHERE id =?', [req.params.id], (error, result) => {
+        if (error) {
+            resp.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
+        console.log(result[0].forms)
+        if (result[0].forms) {
+            dbConn.query('SELECT client_form.form_name,client_form.form,blank_forms.forms FROM client_form LEFT JOIN blank_forms ON client_form.form_name = blank_forms.id WHERE FIND_IN_SET (client_form.form_name, ?) and client_form.cl_id = md5(?)', [result[0].forms, req.params.cl_id], (error, completeFormResult) => {
+                if (error) {
+                    resp.status(500).json({
+                        success: false,
+                        message: 'Something went wrong'
+                    })
+                }
+
+                if (completeFormResult.length > 0) {
+                    completeFormArray.push(completeFormResult);
+                    // resp.status(200).json({
+                    //     success: true,
+                    //     data: completeFormResult,
+
+                    // })
+
+                }
+            })
+        }
+    })
+
+
+
+    setTimeout(async () => {
+        let flatsessionDates = sessionDates.flat();
+        let stringsessionDates = flatsessionDates.toString();
+        let flatClientName = ClientName.flat();
+        let stringClientName = flatClientName.toString();
+        let flattrainerName = trainerName.flat();
+        let stringtrainerName = flattrainerName.toString();
+        let stringsummaryName = summaryName.toString();
+        let stringsummaryDes = summaryDes.toString();
+
+        
+        let flatpdfArray = pdfArray.flat();
+        let flatpdfreportDestionArray = pdfreportDescriptionArray.flat();
+        let flatliveSessionNoteArray = liveSessionNoteArray.flat();
+        let liveSessionNote = flatliveSessionNoteArray.toString();
+        let flatliveSessionimgArray = liveSessionimgArray.flat();
+        let flatliveimgSessionDesArray = liveimgSessionDesArray.flat();
+        let flatreportNotesArray = reportNotesArray.flat();
+        let stringreportNotesArray = flatreportNotesArray.toString();
+        let flatcompleteFormArray = completeFormArray.flat();
+        let pdfUrl = "https://capnolearning.com/webroot/client_forms/";
+
+
+
+        // console.log(flatcompleteFormArray)
+
+        const pdfDoc = await PDFDocument.create()
+
+        const HelveticaBoldfont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+        const page3 = pdfDoc.addPage();
+
+        let headingcapno = fs.readFileSync("./heading.png");
+     
+        headingcapno = await pdfDoc.embedPng(headingcapno)
+
+        const headingcapnoimgbox = headingcapno.scale(0.6);
+
+        page3.drawImage(headingcapno, {
+            ...headingcapnoimgbox,
+            x: page3.getWidth() / 2 - headingcapnoimgbox.width / 2,
+            y: page3.getHeight() / 2 - headingcapnoimgbox.height / 2 + 400,
+            left: 20
+
+
+        });
+        const { width, height } = page3.getSize()
+        const summaryfontSize = 11
+       
+        page3.drawText('Client Name:', {
+            x: 20,
+            y: height - 6 * summaryfontSize,
+            size: summaryfontSize,
+            color: rgb(0, 0, 0),
+            font: HelveticaBoldfont,
+           
+        })
+        const summaryfontSize2 = 11
+        page3.drawText(stringClientName, {
+            x: 110,
+            y: height - 6 * summaryfontSize2,
+            size: summaryfontSize2,
+            color: rgb(0, 0, 0),
+        })
+        
+        page3.drawText('Trainer Name:', {
+            x: 20,
+            y: height - 8 * summaryfontSize,
+            size: summaryfontSize,
+            color: rgb(0, 0, 0),
+            font: HelveticaBoldfont,
+        })
+       
+        page3.drawText(stringtrainerName, {
+            x: 110,
+            y: height - 8 * summaryfontSize2,
+            size: summaryfontSize2,
+            color: rgb(0, 0, 0),
+        })
+       
+        page3.drawText('Session Date:', {
+            x: 20,
+            y: height - 10 * summaryfontSize,
+            size: summaryfontSize,
+            color: rgb(0, 0, 0),
+            font: HelveticaBoldfont,
+        })
+
+        page3.drawText(stringsessionDates, {
+            x: 110,
+            y: height - 10 * summaryfontSize2,
+            size: summaryfontSize2,
+            color: rgb(0, 0, 0),
+        })
+        const fontSizeSummary = 11
+        page3.drawText('Report Name:', {
+            x: 20,
+            y: height - 16 * fontSizeSummary,
+            size: fontSizeSummary,
+            color: rgb(0, 0, 0),
+            font: HelveticaBoldfont,
+        })
+        page3.drawText(stringsummaryName? stringsummaryName : "No report name", {
+            x: 120,
+            y: height - 16 * fontSizeSummary,
+            size: fontSizeSummary,
+            color: rgb(0, 0, 0),
+        })
+       
+        page3.drawText("Report Summary:", {
+            x: 20,
+            y: height - 18 * summaryfontSize,
+            size: fontSizeSummary,
+            color: rgb(0, 0, 0),
+            font: HelveticaBoldfont,
+        })
+
+        page3.drawText(stringsummaryDes? stringsummaryDes: "No report summary", {
+            x: 120,
+            y: height - 18 * summaryfontSize,
+            size: fontSizeSummary,
+            color: rgb(0, 0, 0),
+        })
+
+   
+
+        var pdfArrayrequiredPages = flatpdfArray.length
+
+        for (var i = 0; i < pdfArrayrequiredPages; i++) {
+            const HelveticaBoldfont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+
+            const page1 = pdfDoc.addPage();
+            
+            const { width, height } = page1.getSize()
+            const fontSize = 12
+            page1.drawText('PDF Report' + " " + "(" + (i + 1) + ")", {
+                x: 20,
+                y: height - 2 * fontSize,
+                size: fontSize,
+                color: rgb(0, 0, 0),
+                font: HelveticaBoldfont,
+            })
+
+            let sessionimg = flatpdfArray[i].data;
+            console.log(sessionimg)
+            sessionimg = await pdfDoc.embedPng(sessionimg)
+
+            const sessionimgBox = sessionimg.scale(0.3);
+
+            page1.drawImage(sessionimg, {
+                ...sessionimgBox,
+                x: page1.getWidth() / 2 - sessionimgBox.width / 2,
+                y: page1.getHeight() / 2 - sessionimgBox.height / 2 + 200,
+
+
+            });
+
+            page1.drawText('PDF Report Description' + " " + "(" + (i + 1) + ")", {
+                x: 20,
+                y: height - 30 * fontSize,
+                size: fontSize,
+                font: HelveticaBoldfont,
+                color: rgb(0, 0, 0),
+            })
+            const fontSizepdfArray = 12
+            page1.drawText(flatpdfreportDestionArray[i]? flatpdfreportDestionArray[i]: "No pdf report description ", {
+                x: 20,
+                y: height - 32 * fontSize,
+                size: fontSizepdfArray,
+             
+                color: rgb(0, 0, 0),
+            })
+
+        }
+
+
+        const page1 = pdfDoc.addPage();
+  
+        const fontSize = 12
+        page1.drawText('Live Session Notes', {
+            x: 20,
+            y: height - 2 * fontSize,
+            size: fontSize,
+            color: rgb(0, 0, 0),
+            font: HelveticaBoldfont,
+        })
+        const fontSizepdfArray = 12
+     
+        page1.drawText(liveSessionNote? liveSessionNote: "No live session notes", {
+            x: 20,
+            y: height - 4 * fontSize,
+            size: fontSizepdfArray,
+            color: rgb(0, 0, 0),
+        })
+
+        var liveimgrequiredPages = flatliveSessionimgArray.length
+
+        for (var i = 0; i < liveimgrequiredPages; i++) {
+            const HelveticaBoldfont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+            const page1 = pdfDoc.addPage();
+       
+            const { width, height } = page1.getSize()
+            const fontSize = 12
+            page1.drawText('Live Session Image' + " " + "(" + (i + 1) + ")", {
+                x: 20,
+                y: height - 2 * fontSize,
+                size: fontSize,
+                font: HelveticaBoldfont,
+                color: rgb(0, 0, 0),
+            })
+
+            let liveimg = flatliveSessionimgArray[i].sessiondata;
+            console.log(liveimg)
+            liveimg = await pdfDoc.embedPng(liveimg)
+
+            const sessionimgBox = liveimg.scale(0.3);
+
+            page1.drawImage(liveimg, {
+                ...sessionimgBox,
+                x: page1.getWidth() / 2 - sessionimgBox.width / 2,
+                y: page1.getHeight() / 2 - sessionimgBox.height / 2 + 200,
+
+
+            });
+
+            page1.drawText('Live Session Image Description' + " "+ "(" + (i + 1) + ")", {
+                x: 20,
+                y: height - 30 * fontSize,
+                size: fontSize,
+                font: HelveticaBoldfont,
+                color: rgb(0, 0, 0),
+            })
+            const fontSizepdfArray = 12
+            page1.drawText(flatliveimgSessionDesArray[i]? flatliveimgSessionDesArray[i]: "No livesession image description", {
+                x: 20,
+                y: height - 32 * fontSize,
+                size: fontSizepdfArray,
+                color: rgb(0, 0, 0),
+            })
+
+
+
+
+        }
+
+        const page4 = pdfDoc.addPage();
+  
+        const fontSizelivesessionNote = 12
+        page4.drawText('Report Notes', {
+            x: 20,
+            y: height - 2 * fontSizelivesessionNote,
+            size: fontSizelivesessionNote,
+            color: rgb(0, 0, 0),
+            font: HelveticaBoldfont,
+        })
+        const fontSizelivesessiondes = 12
+        
+        page4.drawText(stringreportNotesArray? stringreportNotesArray: "No report notes", {
+            x: 20,
+            y: height - 4 * fontSizelivesessiondes,
+            size: fontSizelivesessiondes,
+            color: rgb(0, 0, 0),
+        })
+
+           var completeformrequiredPages = flatcompleteFormArray.length
+
+           for (var i = 0; i < completeformrequiredPages; i++) {
+
+            const HelveticaBoldfont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+            const page2 = pdfDoc.addPage();
+           
+            const { width, height } = page2.getSize()
+            const fontSize = 12
+            page2.drawText(flatcompleteFormArray[i].forms, {
+                x: 20,
+                y: height - 2 * fontSize,
+                size: fontSize,
+                font: HelveticaBoldfont,
+                color: rgb(0,0,0),
+            })
+            const pdfUrls = pdfUrl + flatcompleteFormArray[i].form;
+            console.log(pdfUrls)
+            const completeformPdfBytes = await fetch(pdfUrls).then((res) => res.arrayBuffer());
+            const [compleformpdf] = await pdfDoc.embedPdf(completeformPdfBytes);
+
+            const completeformDims = compleformpdf.scale(1);
+
+
+            page2.drawPage(compleformpdf, {
+                ...completeformDims,
+                x: page2.getWidth() / 1 - completeformDims.width / 1,
+                y: page2.getHeight()/ 1 - completeformDims.height / 1,
+            });
+
+        }
+
+       
+       fs.writeFileSync("./output.pdf",await pdfDoc.save())
+
+    //    var data =fs.readFileSync('./output.pdf');
+    //    resp.contentType("application/pdf");
+    //    resp.send(data);
+  
 
     
-// }
 
+        let _resp = {
+            success: true,
+            sessionDates: sessionDates,
+            ClientName: ClientName,
+            trainerName: trainerName,
+            summaryName: summaryName,
+            summaryDes: summaryDes,
+            pdfArray: pdfArray,
+            pdfreportDescriptionArray: pdfreportDescriptionArray,
+            liveSessionNoteArray: liveSessionNoteArray,
+            liveSessionimgArray: liveSessionimgArray,
+            liveimgSessionDesArray: liveimgSessionDesArray,
+            reportNotesArray: reportNotesArray,
+            completeFormArray: completeFormArray
+
+        }
+
+        return resp.status(200).json(_resp)
+
+
+    }, 30000);
+
+}

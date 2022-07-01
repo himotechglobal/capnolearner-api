@@ -37,7 +37,7 @@ const { getUser } = require('./controllers/getUserController');
 // const { getAllForms } = require('./models/blankFormModel');
 const { getAllForm, getClientForm, uploadClientForm, deleteClientForm,deleteTrainerForm, uploadClientHomework,uploadTrainerForm,getTrainerForm,getClientHomework,deleteClientHomework } = require('./controllers/formController');
 const {subscribedAccounts,allAccounts,subscriberUserList,getExpireDate7days,getExpireDate30days,updateExpirydate,updateExpirydatebyYEAR} = require('./controllers/subscribeuserControlller')
-const {getAssemblylistbyid,assemblylist,updateAssemblyreport,getCompleteforms,getNmaes,getassemblyliveNotes,getassemblyliveimages,assemblypdfreports,getclientformName,getpractionerformname,saveAssemblyreport,getassemblySetionReport,getassemblyReportsesseionNotes} = require('./controllers/assemblyController')
+const {getFullscreenshort2,saveAssemblyFullscreenshort,getAssemblylistbyid,assemblylist,updateAssemblyreport,getCompleteforms,getNmaes,getassemblyliveNotes,getassemblyliveimages,assemblypdfreports,getclientformName,getpractionerformname,saveAssemblyreport,getassemblySetionReport,getassemblyReportsesseionNotes} = require('./controllers/assemblyController')
 const {updateonlineAccess,updateonlineAccessBydomain,updateonlineAccessByemail,getDomains,getonlineAccessList,getEmail} = require('./controllers/onlineAccessController')
 
 // onlineaccess api
@@ -76,6 +76,8 @@ router.get('/get/livenotes/:id',getassemblyliveNotes);
 router.get('/assembly/list',assemblylist);
 router.get('/assembly/list/by/:id',getAssemblylistbyid);
 router.post('/update/assembly/report/:id',updateAssemblyreport);
+router.post('/save/assembly/fullscreenshort/:id',saveAssemblyFullscreenshort);
+router.get('/get/full/screenshort/:id/:cl_id',getFullscreenshort2);
           
 router.get('/get/client/formname/:cl_id',getclientformName);
 router.get('/get/practioner/formname/:clientid',getpractionerformname);
