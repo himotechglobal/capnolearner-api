@@ -135,7 +135,12 @@ SavedSingleReport.saveGroupGraph = (_data,result) => {
             grid: data.grid,
             inverty: data.inverty,
             yposition: data.yposition,
-            lineType: data.lineType
+            lineType: data.lineType,
+            thresholdtLine: data.thresholdtLine,
+            thresholdtcolor: data.thresholdtLine,
+            stat: data.stat,
+            thresholdthick: data.thresholdthick,
+            thresholdvalue: data.thresholdvalue
   };
   _other = JSON.stringify(_other)
   let comment = JSON.stringify(data.comment);
@@ -164,7 +169,12 @@ SavedSingleReport.saveGraph = (_data,result) => {
             grid: data.grid,
             inverty: data.inverty,
             yposition: data.yposition,
-            lineType: data.lineType
+            lineType: data.lineType,
+            thresholdtLine: data.thresholdtLine,
+            thresholdtcolor: data.thresholdtLine,
+            stat: data.stat,
+            thresholdthick: data.thresholdthick,
+            thresholdvalue: data.thresholdvalue
   };
   _other = JSON.stringify(_other)
   let comment = JSON.stringify(data.comment);
