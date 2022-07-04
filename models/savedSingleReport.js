@@ -224,7 +224,7 @@ SavedSingleReport.updateReport = (data,result) => {
 // get all Client 
 SavedSingleReport.saveReport = (data,result) => {
   //  console
-  dbConn.query('INSERT INTO `client_session_report`(`session_id`, `pid`, `name`, `notes`,`status`, `timezone`,` clock`) VALUES (?,?,?,?,?,?,?)', [data.session_id,data.pid,data.name,data.notes, data.status, data.timezone, data.clock],  (err, res) => {
+  dbConn.query('INSERT INTO `client_session_report`(`session_id`, `pid`, `name`, `notes`,`status`, `timezone`,`clock`) VALUES (?,?,?,?,?,?,?)', [data.session_id,data.pid,data.name,data.notes, data.status, data.timezone, data.clock],  (err, res) => {
       if (err) {
         result(err ,null);
       } else {
