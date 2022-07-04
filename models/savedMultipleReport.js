@@ -32,7 +32,7 @@ SavedMultipleReport.getReport = (data,result) => {
 
 SavedMultipleReport.createReport = (data,result) => {
    
-  dbConn.query('INSERT INTO `multisession_data_report`(`clid`, `notes`, `report_name`, `rid`, `timezone`) VALUES (md5(?),?,?,?,?)', [data.cid,data.notes,data.name,data.rid,data.timezone],  (err, res) => {
+  dbConn.query('INSERT INTO `multisession_data_report`(`clid`, `notes`, `report_name`, `rid`, `timezone` ,clock) VALUES (md5(?),?,?,?,?,?)', [data.cid,data.notes,data.name,data.rid,data.timezone,data.clock],  (err, res) => {
       if (err) {
         result(err ,null);
       } else {
