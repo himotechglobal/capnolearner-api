@@ -2,7 +2,7 @@ const dbConn = require('../dbConnection')
 const md5 = require('md5');
 
 const user_type = 2
-const status = 1
+const status = 1 
 
 var Trainer = function(trainer) {
     this.firstname = trainer.firstname
