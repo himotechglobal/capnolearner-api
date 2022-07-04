@@ -252,20 +252,8 @@ exports.updateSingleReport = (req, res) => {
 
 
 
-exports.saveMultiReport = (req, res) => {
-    // console.log(req.body);
- 
-    SavedSingleReport.saveReport(req.body,(err, reports) => {
-            if(err)
-            throw new Error(err)
-            return res.status(200).json({ 
-                status: true,
-                reports
-            })
-        })
-    
-   
-}
+
+
 
 
 exports.saveMultiReport = (req, res) => {
