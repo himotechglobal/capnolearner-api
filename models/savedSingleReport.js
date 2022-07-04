@@ -75,7 +75,13 @@ SavedSingleReport.updateGroupGraph = (_data,result) => {
             grid: data.grid,
             inverty: data.inverty,
             yposition: data.yposition,
-            lineType: data.lineType
+            lineType: data.lineType,
+            thresholdtLine: data.thresholdtLine,
+            thresholdtcolor: data.thresholdtLine,
+            stat: data.stat,
+            thresholdthick: data.thresholdthick,
+            thresholdvalue: data.thresholdvalue,
+            clock: data.clock
   };
   _other = JSON.stringify(_other)
   let comment = JSON.stringify(data.comment);
@@ -105,7 +111,13 @@ SavedSingleReport.updateGraph = (_data,result) => {
             grid: data.grid,
             inverty: data.inverty,
             yposition: data.yposition,
-            lineType: data.lineType
+            lineType: data.lineType,
+            thresholdtLine: data.thresholdtLine,
+            thresholdtcolor: data.thresholdtLine,
+            stat: data.stat,
+            thresholdthick: data.thresholdthick,
+            thresholdvalue: data.thresholdvalue,
+            clock: data.clock
   };
   _other = JSON.stringify(_other)
   let comment = JSON.stringify(data.comment);
@@ -140,7 +152,8 @@ SavedSingleReport.saveGroupGraph = (_data,result) => {
             thresholdtcolor: data.thresholdtLine,
             stat: data.stat,
             thresholdthick: data.thresholdthick,
-            thresholdvalue: data.thresholdvalue
+            thresholdvalue: data.thresholdvalue,
+            clock: data.clock
   };
   _other = JSON.stringify(_other)
   let comment = JSON.stringify(data.comment);
@@ -174,7 +187,8 @@ SavedSingleReport.saveGraph = (_data,result) => {
             thresholdtcolor: data.thresholdtLine,
             stat: data.stat,
             thresholdthick: data.thresholdthick,
-            thresholdvalue: data.thresholdvalue
+            thresholdvalue: data.thresholdvalue,
+            clock: data.clock
   };
   _other = JSON.stringify(_other)
   let comment = JSON.stringify(data.comment);

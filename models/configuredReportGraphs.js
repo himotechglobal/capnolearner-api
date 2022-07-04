@@ -68,7 +68,13 @@ ConfiguredReportGraph.saveAlternateGraph = (_data,result) => {
             grid: data.grid,
             inverty: data.inverty,
             yposition: data.yposition,
-            lineType: data.lineType
+            lineType: data.lineType,
+            thresholdtLine: data.thresholdtLine,
+            thresholdtcolor: data.thresholdtLine,
+            stat: data.stat,
+            thresholdthick: data.thresholdthick,
+            thresholdvalue: data.thresholdvalue,
+            clock: data.clock
   }
   _other = JSON.stringify(_other);
  dbConn.query('INSERT INTO `pre_configured_graphs` (`signal_name`,`color`,`type`, `avg`, `thick`, `xmin`, `xmax`, `ymin`, `ymax`, `pid`, `graph_order`, `row`, `col` , `other_config` ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) ' , [_data.signal_name,data.color,data.type,data.avg, data.thick,data.xmin,data.xmax,data.ymin,data.ymax,_data.alternateId,data.graph_order,data.row,data.col,_other],  (err, res) => {
