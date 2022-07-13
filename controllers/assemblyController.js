@@ -189,8 +189,8 @@ exports.getassemblySetionReport = (req, resp) => {
             })
         }
 
-        console.log(result[0].reportids)
-        if (result[0].reportids) {
+
+        if (result[0]) {
             dbConn.query('SELECT * FROM session_data_report_pdf WHERE FIND_IN_SET (id, ?)', [result[0].reportids], (error, finalResult) => {
                 if (error) {
                     resp.status(500).json({
@@ -414,8 +414,8 @@ exports.getCompleteforms = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
-        console.log(result[0].forms)
-        if (result[0].forms) {
+       
+        if (result[0]) {
             dbConn.query('SELECT client_form.form_name,client_form.form,blank_forms.forms FROM client_form LEFT JOIN blank_forms ON client_form.form_name = blank_forms.id WHERE FIND_IN_SET (client_form.form_name, ?) and client_form.cl_id = md5(?)', [result[0].forms, req.params.cl_id], (error, resultFormName) => {
                 if (error) {
                     resp.status(500).json({
@@ -498,8 +498,8 @@ exports.getFullscreenshort2 = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
-        console.log(result[0].session)
-        if (result[0].session) {
+  
+        if (result[0]) {
 
             dbConn.query('SELECT * FROM client_session WHERE id = ?', [result[0].session], (err, resultCid) => {
                 if (err) {
@@ -508,8 +508,8 @@ exports.getFullscreenshort2 = (req, resp) => {
                         message: 'Something went wrong'
                     })
                 }
-                console.log(resultCid[0].cid)
-                if (resultCid[0].cid) {
+             
+                if (resultCid[0]) {
                     dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [resultCid[0].cid], (err, getclientResult) => {
                         if (err) {
                             resp.status(500).json({
@@ -608,7 +608,7 @@ exports.getFullscreenshort2 = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
-        if (result[0].session) {
+        if (result[0]) {
             dbConn.query('SELECT * FROM capno_data WHERE sessionid = md5(?) and data_type = 4', [result[0].session], (error, livesessionNoteResult) => {
                 if (error) {
                     resp.status(500).json({
@@ -636,8 +636,8 @@ exports.getFullscreenshort2 = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
-        console.log(result[0].session)
-        if (result[0].session) {
+       
+        if (result[0]) {
             dbConn.query('SELECT * FROM capno_data WHERE sessionid = md5(?) and data_type = 3', [result[0].session], (error, liveSessionimgResult) => {
                 if (error) {
                     resp.status(500).json({
@@ -683,8 +683,8 @@ exports.getFullscreenshort2 = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
-        console.log(result[0].forms)
-        if (result[0].forms) {
+
+        if (result[0]) {
             dbConn.query('SELECT client_form.form_name,client_form.form,blank_forms.forms FROM client_form LEFT JOIN blank_forms ON client_form.form_name = blank_forms.id WHERE FIND_IN_SET (client_form.form_name, ?) and client_form.cl_id = md5(?)', [result[0].forms, req.params.cl_id], (error, completeFormResult) => {
                 if (error) {
                     resp.status(500).json({
@@ -1034,6 +1034,6 @@ exports.getFullscreenshort2 = (req, resp) => {
         // return resp.status(200).json(_resp)
 
 
-    }, 30000);
+    }, 20000);
 
 }
