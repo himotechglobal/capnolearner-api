@@ -40,7 +40,7 @@ exports.getAssemblylistbyid = (req, resp) => {
 }
 
 exports.assemblypdfreports = (req, resp) => {
-    console.log(req.params.session_id)
+    // console.log(req.params.session_id)
     dbConn.query('SELECT * FROM session_data_report_pdf WHERE session_id = ?', [req.params.session_id], (error, result) => {
         if (error) {
             resp.status(500).json({
@@ -115,7 +115,7 @@ exports.saveAssemblyreport = (req, resp) => {
     let reportidsval = reportids.join();
     var forms = req.body.forms;
     let formsval = forms.join();
-    console.log(forms)
+    // console.log(forms)
 
     var assemblydata = "INSERT INTO assembly_report (session,lnotes,limages,rnotes,cforms,reportids,forms) VALUES ?";
 
@@ -155,10 +155,10 @@ exports.updateAssemblyreport = (req, resp) => {
 
     const data = [req.body.name, req.body.summary, pdfrportjson, livesessiionimgjson, req.params.id];
 
-    console.log(req.body.name)
-    console.log(req.body.summary)
-    console.log(req.body.report_desc)
-    console.log(req.body.session_image_desc)
+    // console.log(req.body.name)
+    // console.log(req.body.summary)
+    // console.log(req.body.report_desc)
+    // console.log(req.body.session_image_desc)
     dbConn.query('UPDATE assembly_report SET name =?,summary = ?,report_desc =?,session_image_desc =? WHERE id = ?', data, (err, result) => {
         if (err) {
 
@@ -319,8 +319,8 @@ exports.getNmaes = (req, resp) => {
                 message: 'Something went wrong'
             })
         }
-        console.log(result[0].session)
-        if (result[0].session) {
+        // console.log(result[0].session)
+        if (result[0]) {
 
             dbConn.query('SELECT * FROM client_session WHERE id = ?', [result[0].session], (err, resultCid) => {
                 if (err) {
@@ -329,7 +329,7 @@ exports.getNmaes = (req, resp) => {
                         message: 'Something went wrong'
                     })
                 }
-                console.log(resultCid[0].cid)
+                // console.log(resultCid[0].cid)
                 if (resultCid[0].cid) {
                     dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [resultCid[0].cid], (err, getclientResult) => {
                         if (err) {
@@ -851,7 +851,7 @@ exports.getFullscreenshort2 = (req, resp) => {
             })
 
             let sessionimg = flatpdfArray[i].data;
-            console.log(sessionimg)
+           
             sessionimg = await pdfDoc.embedPng(sessionimg)
 
             const sessionimgBox = sessionimg.scale(0.3);
@@ -919,7 +919,7 @@ exports.getFullscreenshort2 = (req, resp) => {
             })
 
             let liveimg = flatliveSessionimgArray[i].sessiondata;
-            console.log(liveimg)
+            
             liveimg = await pdfDoc.embedPng(liveimg)
 
             const sessionimgBox = liveimg.scale(0.3);
@@ -988,7 +988,7 @@ exports.getFullscreenshort2 = (req, resp) => {
                 color: rgb(0, 0, 0),
             })
             const pdfUrls = pdfUrl + flatcompleteFormArray[i].form;
-            console.log(pdfUrls)
+            // console.log(pdfUrls)
             const completeformPdfBytes = await fetch(pdfUrls).then((res) => res.arrayBuffer());
             const [compleformpdf] = await pdfDoc.embedPdf(completeformPdfBytes);
 
@@ -1034,6 +1034,74 @@ exports.getFullscreenshort2 = (req, resp) => {
         // return resp.status(200).json(_resp)
 
 
-    }, 20000);
+    }, 30000);
 
+}
+
+
+// session assembly reports api
+
+
+exports.displayEssemblylist = (req, resp) => {
+    dbConn.query('SELECT * FROM client_session WHERE id = ?', [req.params.id], (err, result) => {
+
+        if(err){
+            console.log(err)
+            resp.status(500).json({
+                success: false,
+                message: 'Somothing went wrong'
+            })
+        }
+        if (result[0].cid) {
+            dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [result[0].cid], (err, getclientResult) => {
+                if (err) {
+                    console.log(err)
+                    resp.status(500).json({
+                        success: false,
+                        message: 'Somothing went wrong'
+                    })
+                }
+                if (getclientResult) {
+                    
+                    // console.log(req.params.id)
+                    dbConn.query('SELECT name,created_at,id FROM assembly_report WHERE session = ?', [req.params.id], (err, finalResult) => {
+
+                        if (err) {
+                            resp.status(500).json({
+                                success: false,
+                                message: 'Somothing went wrong'
+                            })
+                        }
+                        if (finalResult.length > 0) {
+                            resp.status(200).json({
+                                success: true,
+                                data: finalResult,
+                                sessionDate: result[0].name,
+                                firstname: getclientResult[0].firstname,
+                                lastname: getclientResult[0].lastname,
+                                
+
+                            })
+                        }
+                    })
+                }
+            })
+        }
+
+    })
+
+}
+
+exports.DeletedisplayEssemblylist = (req, resp)=>{
+    dbConn.query('DELETE FROM assembly_report WHERE id = ?', [req.params.id], (err, result) => {
+
+        if(err){
+            resp.status(500).json({
+                success: false,
+                message: 'Somothing went wrong'
+            })
+        }
+        resp.send(result)
+
+    })
 }
