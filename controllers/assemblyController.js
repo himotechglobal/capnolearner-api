@@ -1007,7 +1007,7 @@ exports.getFullscreenshort2 = (req, resp) => {
         fs.writeFileSync("./output.pdf", await pdfDoc.save())
        
 
-           var data =fs.readFileSync('./output.pdf');
+           const data =fs.readFileSync('./output.pdf');
            resp.contentType("application/pdf");
            resp.send(data);
 
@@ -1034,7 +1034,7 @@ exports.getFullscreenshort2 = (req, resp) => {
         // return resp.status(200).json(_resp)
 
 
-    }, 30000);
+    }, 20000);
 
 }
 
@@ -1052,7 +1052,7 @@ exports.displayEssemblylist = (req, resp) => {
                 message: 'Somothing went wrong'
             })
         }
-        if (result[0].cid) {
+        if (result[0]) {
             dbConn.query('SELECT * FROM capno_users WHERE md5(id) = ?', [result[0].cid], (err, getclientResult) => {
                 if (err) {
                     console.log(err)
