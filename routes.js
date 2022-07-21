@@ -22,7 +22,7 @@ const profileupload = multer({
     storage: profileStorage,
     limits: {fileSize: 2000000},
 })
-const {getpdf,getNotepdf,livesessionImage,livesessionNotes,getScreenshot,getPrevScreenshot,savescreenshort} = require('./controllers/savepdfControlller');
+const {getpdf,getNotepdf,livesessionImage,livesessionImagedownload,livesessionNotes,getScreenshot,getPrevScreenshot,savescreenshort} = require('./controllers/savepdfControlller');
 const { getTrainerList, getTrainerInactiveList, getTrainerByID, createNewTrainer, updateTrainer, deleteTrainer } = require('./controllers/trainerController');
 const { getClientList, getInctiveClientList,  getClientByID, createNewClient, updateClient, deleteClient } = require('./controllers/clientController');
 const { getGroupProfileByGroupID, getGroupByID, createNewGroup, updateGroup,updateGroupProfile, deleteGroup } = require('./controllers/groupController');
@@ -58,6 +58,8 @@ router.get('/pdf/list/:id',getpdf);
 router.get('/get/pdfnotes/list/:id',getNotepdf);
 // router.get('/get/pdfnotes/list/:id',getNotepdf);
 router.get('/get/live/sessionimage/:sessionid/:data_type',livesessionImage);
+router.get('/get/live/sessionimage/download/:sessionid/:data_type',livesessionImagedownload);
+
 router.get('/get/live/session/notes/:sessionid/:data_type',livesessionNotes);
 router.post('/save/screenshot',profileupload.single('data'),savescreenshort);
 router.get('/get/screenshot/:id',getScreenshot);
