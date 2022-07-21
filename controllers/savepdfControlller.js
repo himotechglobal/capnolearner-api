@@ -200,7 +200,7 @@ exports.livesessionImage = (req, resp) => {
                                     resp.status(200).json({
                                         success: true,
                                         data: finalResult,
-                                        result: result[0].sessiondata,
+                                        result: result,
                                         sessionDate: resultCid[0].name,
                                         firstname: getclientResult[0].firstname,
                                         lastname: getclientResult[0].lastname,
