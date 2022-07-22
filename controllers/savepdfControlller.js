@@ -172,7 +172,8 @@ exports.livesessionImage = (req, resp) => {
             })
         }
         // console.log(result[0].sessionid)
-        if (result[0]) {
+        if (result) {
+            
             dbConn.query('SELECT * FROM client_session WHERE md5(id) = ?', [result[0].sessionid], (err, resultCid) => {
                 if (err) {
                     resp.status(500).json({
@@ -202,7 +203,7 @@ exports.livesessionImage = (req, resp) => {
                                     resp.status(200).json({
                                         success: true,
                                         data: finalResult,
-                                        result: result,
+                                        dataimg: result,
                                         sessionDate: resultCid[0].name,
                                         firstname: getclientResult[0].firstname,
                                         lastname: getclientResult[0].lastname,
@@ -235,7 +236,7 @@ exports.livesessionImagedownload = (req, resp) => {
     trainerName = [];
   
 
-    console.log(req.params.sessionid)
+
     dbConn.query('SELECT * FROM capno_data WHERE sessionid = md5(?) and data_type = ?', [req.params.sessionid, req.params.data_type], (err, result) => {
         if (err) {
             resp.status(500).json({
@@ -245,7 +246,8 @@ exports.livesessionImagedownload = (req, resp) => {
         }
         // console.log(result[0].sessionid)
         if (result[0]) {
-            sessionImage.push(result[0].sessiondata);
+            sessionImage.push(result);
+            
             dbConn.query('SELECT * FROM client_session WHERE md5(id) = ?', [result[0].sessionid], (err, resultCid) => {
                 if (err) {
                     resp.status(500).json({
@@ -253,6 +255,7 @@ exports.livesessionImagedownload = (req, resp) => {
                         message: 'Somothing went wrong'
                     })
                 }
+                
                 
                 if (resultCid[0]) {
                     sessionDate.push(resultCid[0].name)
@@ -311,12 +314,11 @@ exports.livesessionImagedownload = (req, resp) => {
     setTimeout( () => {
 
         let stringsessionDate = sessionDate.toString();
-        let stringsessionImage = sessionImage.toString();
         let stringclientName = clientName.toString();
         let stringtrainerName = trainerName.toString();
-
+        let flatsessionImage = sessionImage.flat();
+       
         const doc = new jsPDF();
-
         doc.setTextColor(0, 0, 0);
         doc.text('Capnolearning Report', 10, 10,
             {styles:{ fontSize: 20,fontWeight: 'bold'}})
@@ -331,11 +333,17 @@ exports.livesessionImagedownload = (req, resp) => {
         doc.text("Session Date:" ,10,25)
         doc.text("Client:" ,10,30);
         doc.text("Trainer:",10,35);
-        // doc.setFont(undefined, 'bold')
-        console.log(sessionImage.length)
-        var sessionImagerequiredPages = sessionImage.length;
+        doc.setFont(undefined, 'bold')
+        
+        var sessionImagerequiredPages = flatsessionImage.length;
+        console.log(sessionImagerequiredPages)
         for (var i = 0; i < sessionImagerequiredPages; i++) {
-        doc.addImage(stringsessionImage, 5, 45,200,110);
+            
+            let liveimg = flatsessionImage[i].sessiondata;
+            doc.addImage(liveimg, 5, 45,200,110);
+            if (i != flatsessionImage.length - 1) {
+                    doc.addPage();
+                }
         }
         const data = doc.save()
 
