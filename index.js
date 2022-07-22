@@ -33,7 +33,7 @@ setInterval(() => {
      
   
   })
-}, 900000);
+}, 90000);
 
 app.use((err, req, res, next) => {
     // console.log(err);
